@@ -6,3 +6,14 @@
 .itemTypeDesc {
     font-size: small;
 }
+
+.img {
+    max-height: -webkit-fill-available;
+}
+
+.itemType {
+    background-color: var(--mat-sys-inverse-primary);
+    color: blue;
+    padding: 8px !important;
+    border-radius: 15px;
+}

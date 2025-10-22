@@ -1,10 +1,15 @@
-<div class="row">
+<button matButton="tonal" routerLink="/item-types"><mat-icon>home</mat-icon>Back to types</button>
+
+<mat-grid-list cols="6">
+    <mat-grid-tile>
+        total items: {{items.isLoading()}} {{items.status()}}
+    </mat-grid-tile>
     @for (x of items.value(); track $index) {
-        <div class="col-md-2">
-            <img [src]=path() class="img-fluid">
+        <mat-grid-tile>
+            <img [src]="path(x.path)" class="img-fluid">
             <span class="itemName">{{x.name}}</span>
             <br/>
             <span class="itemDesc">{{x.description}}</span>
-        </div>
+        </mat-grid-tile>
     }
-</div>
+</mat-grid-list>

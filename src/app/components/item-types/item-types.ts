@@ -1,9 +1,12 @@
 import { Component, inject, resource } from '@angular/core';
 import { GlobalService } from '../../service/global-service';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { RouterLink } from "@angular/router";
+import { MatButtonModule } from "@angular/material/button";
 
 @Component({
   selector: 'app-item-types',
-  imports: [],
+  imports: [MatGridListModule, RouterLink, MatButtonModule],
   templateUrl: './item-types.html',
   styleUrl: './item-types.css'
 })

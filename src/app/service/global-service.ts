@@ -19,7 +19,7 @@ export class GlobalService {
   }
 
   getImagePath(path:string) {
-    return "http://localhost:80/"+ path
+    return "http://localhost:8080/"+ path
   }
 
   userDialog(user?: User): MatDialogRef<UserDialog> {

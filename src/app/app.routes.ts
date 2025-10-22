@@ -35,7 +35,7 @@ export const routes: Routes = [
         component: ItemTypes
     },
     {
-        path: 'items-by-type',
+        path: 'items-by-type/:id',
         component: ItemsByType
     },
     {
