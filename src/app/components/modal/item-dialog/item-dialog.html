@@ -28,7 +28,7 @@
                 <input matInput type="number" formControlName="price">
             </mat-form-field>
             <mat-form-field>
-                <mat-label>Category</mat-label>
+                <mat-label>Type</mat-label>
                 <mat-select formControlName="typeId">
                     @for (type of itemTypes; track type.id) {
                     <mat-option [value]="type.id">{{type.name}}</mat-option>

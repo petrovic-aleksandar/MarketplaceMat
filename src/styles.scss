@@ -37,3 +37,8 @@ body {
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+/* ovo mi je za input polja da se rasire*/
+.mat-mdc-form-field {
+    width: -webkit-fill-available;
+}

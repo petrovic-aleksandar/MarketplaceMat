@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, Inject, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatCard, MatCardContent, MatCardHeader, MatCardModule, MatCardSubtitle, MatCardTitle, MatCardActions } from '@angular/material/card';
-import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 import { UserReq } from '../../../model/request/user-req';
 import { UserService } from '../../../service/user-service';
 import { HttpClient } from '@angular/common/http';
@@ -14,7 +14,7 @@ import { MatOption, MatSelect } from "@angular/material/select";
 
 @Component({
   selector: 'app-user-dialog',
-  imports: [ReactiveFormsModule, MatCard, MatCardHeader, MatCardTitle, MatCardContent, MatCardActions, MatFormField, MatLabel, MatInput, MatCardSubtitle, MatIcon, MatButton, MatSelect, MatOption, MatCardActions],
+  imports: [ReactiveFormsModule, MatCard, MatCardHeader, MatCardTitle, MatCardContent, MatCardActions, MatFormField, MatLabel, MatInput, MatCardSubtitle, MatIcon, MatButton, MatSelect, MatOption, MatCardActions, MatError],
   templateUrl: './user-dialog.html',
   styleUrl: './user-dialog.scss'
 })

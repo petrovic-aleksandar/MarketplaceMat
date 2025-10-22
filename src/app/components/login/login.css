@@ -1,7 +1,7 @@
-.mat-mdc-form-field {
-    width: -webkit-fill-available;
+mat-card {
+    width: 500px;
 }
 
-mat-card {
-    width: 400px;
+mat-card-footer {
+    padding-left: 10px;
 }

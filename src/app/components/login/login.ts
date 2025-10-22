@@ -7,13 +7,13 @@ import { Component, inject } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { MatCard, MatCardContent, MatCardHeader, MatCardTitle, MatCardSubtitle, MatCardFooter, MatCardActions } from '@angular/material/card';
 import { MatFormField, MatLabel } from "@angular/material/select";
-import { MatInput } from '@angular/material/input';
+import { MatError, MatInput } from '@angular/material/input';
 import { MatButton } from "@angular/material/button";
 import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule, RouterLink, MatCard, MatFormField, MatCardActions, MatButton, MatLabel, MatInput, MatIcon, MatCardHeader, MatCardTitle, MatCardContent, MatCardSubtitle, MatCardFooter, MatCardActions],
+  imports: [ReactiveFormsModule, RouterLink, MatCard, MatFormField, MatCardActions, MatButton, MatLabel, MatInput, MatIcon, MatCardHeader, MatCardTitle, MatCardContent, MatCardSubtitle, MatCardFooter, MatCardActions, MatError],
   templateUrl: './login.html',
   styleUrl: './login.css'
 })

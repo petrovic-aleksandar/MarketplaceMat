@@ -3,24 +3,30 @@
         <mat-card-title>Login</mat-card-title>
         <mat-card-subtitle>Please enter your credentials:</mat-card-subtitle>
     </mat-card-header>
-    <form [formGroup]="loginForm">
-        <mat-card-content>
+    <mat-card-content>
+        <form [formGroup]="loginForm">
             <mat-form-field>
                 <mat-label>Username</mat-label>
                 <input matInput type="text" formControlName="username">
+                @if (loginForm.get('username')?.invalid && loginForm.get('username')?.touched) {
+                <mat-error>Username is required</mat-error>
+                }
             </mat-form-field>
             <mat-form-field>
                 <mat-label>Password</mat-label>
                 <input matInput type="password" formControlName="password">
+                @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
+                <mat-error>Password is required</mat-error>
+                }
             </mat-form-field>
-        </mat-card-content>
-        <mat-card-actions>
-            <button matButton="tonal" [disabled]="loginForm.invalid" (click)="login()">
-                <mat-icon>login</mat-icon>
-                Login
-            </button>
-        </mat-card-actions>
-    </form>
+        </form>
+    </mat-card-content>
+    <mat-card-actions>
+        <button matButton="tonal" [disabled]="loginForm.invalid" (click)="login()">
+            <mat-icon>login</mat-icon>
+            Login
+        </button>
+    </mat-card-actions>
     <mat-card-footer>
         Don't have an account? You can register <a routerLink="../register">here</a>
     </mat-card-footer>
