@@ -44,7 +44,7 @@ export class Register {
 
   register() {
     this.authService.register(this.formToRegUser()).subscribe({
-      next: () => {
+      next: (result) => {
         alert("Account created. you will be redirected to login page, where you can log in with your username and password.")
         this.router.navigateByUrl("/login")
       },

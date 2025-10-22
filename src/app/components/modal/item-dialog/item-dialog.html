@@ -40,14 +40,15 @@
             </mat-form-field>
         </form>
     </mat-card-content>
-    <mat-card-actions> 
+    <mat-card-actions>
         @if( itemForm.value.id == 0) {
-            <button matButton="tonal" [disabled]="itemForm.invalid" (click)="add()"><mat-icon>save</mat-icon>Save</button>
-            } @else {
-            <button matButton="tonal" [disabled]="itemForm.invalid"
-                (click)="update(itemForm.value.id)"><mat-icon>save</mat-icon>Update</button>
-            }
-            <button matButton="outlined" (click)="reset()"><mat-icon>delete</mat-icon>Reset</button>
+        <button matButton="tonal" [disabled]="itemForm.invalid" (click)="add()"><mat-icon>save</mat-icon>Save</button>
+        } @else {
+        <button matButton="tonal" [disabled]="itemForm.invalid"
+            (click)="update(itemForm.value.id)"><mat-icon>save</mat-icon>Update</button>
+        }
+        <button matButton="outlined" (click)="reset()"><mat-icon>delete</mat-icon>Reset</button>
+        <div class="spacer"></div>
         <button mat-button (click)="close()"><mat-icon>close</mat-icon>Close</button>
     </mat-card-actions>
 </mat-card>

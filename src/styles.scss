@@ -42,3 +42,8 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .mat-mdc-form-field {
     width: -webkit-fill-available;
 }
+
+/* da pomjeram dugmad udesno, ubaciti div spacer izmedju*/
+.spacer {
+    flex: 1 1 auto;
+}

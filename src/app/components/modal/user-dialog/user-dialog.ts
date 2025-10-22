@@ -62,7 +62,7 @@ export class UserDialog {
   formToUserReq(): UserReq {
     return {
       username: this.userForm.value.username,
-      password: this.userForm.value.password,
+      password: this.userForm.value.password == null ? "" : this.userForm.value.password,
       updatePassword: this.userForm.value.updatePassword,
       name: this.userForm.value.name,
       email: this.userForm.value.email,
