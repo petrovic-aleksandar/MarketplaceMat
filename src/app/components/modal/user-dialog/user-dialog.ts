@@ -11,10 +11,11 @@ import { MatInput } from '@angular/material/input';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { User } from '../../../model/user';
 import { MatOption, MatSelect } from "@angular/material/select";
+import { MatCheckbox } from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-user-dialog',
-  imports: [ReactiveFormsModule, MatCard, MatCardHeader, MatCardTitle, MatCardContent, MatCardActions, MatFormField, MatLabel, MatInput, MatCardSubtitle, MatIcon, MatButton, MatSelect, MatOption, MatCardActions, MatError],
+  imports: [ReactiveFormsModule, MatCard, MatCardHeader, MatCardTitle, MatCardContent, MatCardActions, MatFormField, MatLabel, MatInput, MatCardSubtitle, MatIcon, MatButton, MatSelect, MatOption, MatCardActions, MatError, MatCheckbox],
   templateUrl: './user-dialog.html',
   styleUrl: './user-dialog.scss'
 })
@@ -38,6 +39,7 @@ export class UserDialog {
     id: new FormControl(0),
     username: new FormControl("", [Validators.required]),
     password: new FormControl("", [Validators.required, Validators.minLength(6)]),
+    updatePassword: new FormControl(true),
     name: new FormControl("", [Validators.required]),
     email: new FormControl("", [Validators.required, Validators.email]),
     phone: new FormControl("", [Validators.required]),
@@ -49,6 +51,7 @@ export class UserDialog {
       id: user.id,
       username: user.username,
       password: "",
+      updatePassword: true,
       name: user.name,
       email: user.email,
       phone: user.phone,
@@ -60,6 +63,7 @@ export class UserDialog {
     return {
       username: this.userForm.value.username,
       password: this.userForm.value.password,
+      updatePassword: this.userForm.value.updatePassword,
       name: this.userForm.value.name,
       email: this.userForm.value.email,
       phone: this.userForm.value.phone,
@@ -72,6 +76,15 @@ export class UserDialog {
       this.userRoles = result
       this.cdr.markForCheck()
     })
+  }
+
+  disablePassword() {
+    if (!this.userForm.get('updatePassword')?.value) {
+      this.userForm.get('password')?.disable()
+      this.userForm.get('password')?.reset()
+    } else {
+      this.userForm.get('password')?.enable()
+    }
   }
 
   reset() {
