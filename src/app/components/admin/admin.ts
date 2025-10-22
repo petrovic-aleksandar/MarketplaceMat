@@ -61,19 +61,13 @@ export class Admin implements OnInit {
   }
 
   addUser() {
-    this.userDialog()
+    this.globalService.userDialog().afterClosed().subscribe(() => {
+      this.loadUsers()
+    })
   }
 
-  editUser(u: User) {
-    this.userDialog(u)
-  }
-
-  userDialog(user?: User) {
-    this.dialog.open(UserDialog, {
-      width: '400px',
-      disableClose: true,
-      data: user ? user : null
-    }).afterClosed().subscribe(() => {
+  editUser(user: User) {
+    this.globalService.userDialog(user).afterClosed().subscribe(() => {
       this.loadUsers()
     })
   }

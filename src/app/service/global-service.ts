@@ -1,10 +1,16 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { User } from '../model/user';
+import { UserDialog } from '../components/modal/user-dialog/user-dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { ItemDialog } from '../components/modal/item-dialog/item-dialog';
+import { Item } from '../model/item';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GlobalService {
+
+  dialog = inject(MatDialog)
 
   getApi (path:string) {
     return "https://localhost:7294/api/" + path + "/"
@@ -14,6 +20,18 @@ export class GlobalService {
 
   getImagePath(path:string) {
     return "http://localhost:80/"+ path
+  }
+
+  userDialog(user?: User): MatDialogRef<UserDialog> {
+    return this.dialog.open(UserDialog, {
+      data: user ? user : null
+    });
+  }
+
+  itemDialog(item?: Item): MatDialogRef<ItemDialog> {
+    return this.dialog.open(ItemDialog, {
+      data: item ? item : null
+    });
   }
   
 }

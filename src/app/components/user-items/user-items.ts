@@ -30,17 +30,7 @@ export class UserItems implements OnInit {
   cdr = inject(ChangeDetectorRef)
 
   itemList: Item[] = []
-  itemTypes: ItemType[] = []
   itemsTableCols: string[] = ['id', 'name', 'description', 'price', 'type', 'active', 'actions'];
-
-  itemForm: FormGroup = new FormGroup({
-    id: new FormControl(0),
-    name: new FormControl("", [Validators.required]),
-    description: new FormControl("", [Validators.required]),
-    price: new FormControl(0),
-    typeId: new FormControl(null, [Validators.required]),
-    sellerId: new FormControl(0)
-  })
 
   ngOnInit(): void {
     this.loadItemsByUser()
@@ -56,18 +46,13 @@ export class UserItems implements OnInit {
   }
 
   add() {
-    this.itemDialog()
+    this.globalService.itemDialog().afterClosed().subscribe(() => {
+      this.loadItemsByUser()
+    })
   }
 
   edit(item: Item) {
-    this.itemDialog(item)
-  }
-
-  itemDialog(item?: Item) {
-    this.dialog.open(ItemDialog, {
-      disableClose: true,
-      data: item ? item : null
-    }).afterClosed().subscribe(() => {
+    this.globalService.itemDialog(item).afterClosed().subscribe(() => {
       this.loadItemsByUser()
     })
   }
