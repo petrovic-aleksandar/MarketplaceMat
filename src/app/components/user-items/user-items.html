@@ -1,0 +1,46 @@
+<button matButton="tonal" (click)="add()"><mat-icon>add</mat-icon>New item</button>
+
+<table mat-table [dataSource]="itemList">
+    <tr mat-header-row *matHeaderRowDef="itemsTableCols"></tr>
+    <tr mat-row *matRowDef="let row; columns: itemsTableCols;"></tr>
+    <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef> ID </th>
+        <td mat-cell *matCellDef="let item"> {{item.id}} </td>
+    </ng-container>
+    <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef> Name </th>
+        <td mat-cell *matCellDef="let item"> {{item.name}} </td>
+    </ng-container>
+    <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef> Description </th>
+        <td mat-cell *matCellDef="let item"> {{item.description}} </td>
+    </ng-container>
+    <ng-container matColumnDef="price">
+        <th mat-header-cell *matHeaderCellDef> Price </th>
+        <td mat-cell *matCellDef="let item"> {{item.price}} </td>
+    </ng-container>
+    <ng-container matColumnDef="type">
+        <th mat-header-cell *matHeaderCellDef> Type </th>
+        <td mat-cell *matCellDef="let item"> {{item.type.name}} </td>
+    </ng-container>
+    <ng-container matColumnDef="createdAt">
+        <th mat-header-cell *matHeaderCellDef> Created At </th>
+        <td mat-cell *matCellDef="let item"> {{item.createdAt | date:"shortDate"}} </td>
+    </ng-container>
+    <ng-container matColumnDef="active">
+        <th mat-header-cell *matHeaderCellDef> Active </th>
+        <td mat-cell *matCellDef="let item"> {{item.active ? "yes" : "no"}} </td>
+    </ng-container>
+    <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef> Actions </th>
+        <td mat-cell *matCellDef="let item">
+            <button matButton="outlined" (click)="edit(item)">Edit</button>
+            @if(item.active) {
+            <button matButton="outlined" (click)="deactivate(item.id)">Deactivate</button>
+            } @else {
+            <button matButton="outlined" (click)="activate(item.id)">Activate</button>
+            }
+            <button matButton="outlined" (click)="delete(item.id)">Delete</button>
+        </td>
+    </ng-container>
+</table>

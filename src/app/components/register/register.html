@@ -1,0 +1,33 @@
+<mat-card>
+    <mat-card-header>
+        <mat-card-title>New user</mat-card-title>
+        <mat-card-subtitle>Please fill in the details below:</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+        <form [formGroup]="userForm">
+            <mat-form-field>
+                <mat-label>Username</mat-label>
+                <input matInput type="text" formControlName="username">
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Password</mat-label>
+                <input matInput type="password" formControlName="password">
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Name</mat-label>
+                <input matInput type="text" formControlName="name">
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Email</mat-label>
+                <input matInput type="text" formControlName="email">
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Phone</mat-label>
+                <input matInput type="text" formControlName="phone">
+            </mat-form-field>
+            <button matButton="tonal" [disabled]="userForm.invalid"
+                (click)="register()"><mat-icon>add</mat-icon>Register</button>
+            <button matButton="outlined" (click)="reset()"><mat-icon>delete</mat-icon>Reset</button>
+        </form>
+    </mat-card-content>
+</mat-card>

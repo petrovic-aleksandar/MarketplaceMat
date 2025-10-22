@@ -1,0 +1,53 @@
+<mat-card>
+    <mat-card-header>
+        @if( itemForm.value.id == 0) {
+        <mat-card-title>New item</mat-card-title>
+        } @else {
+        <mat-card-title>Update item</mat-card-title>
+        }
+        <mat-card-subtitle>Please fill in the details below:</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+        <form [formGroup]="itemForm">
+            <mat-form-field>
+                <mat-label>Name</mat-label>
+                <input matInput type="text" formControlName="name">
+                @if (itemForm.controls['name'].invalid && itemForm.controls['name'].touched) {
+                <mat-error>Name is required</mat-error>
+                }
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Description</mat-label>
+                <input matInput type="text" formControlName="description">
+                @if (itemForm.controls['description'].invalid && itemForm.controls['description'].touched) {
+                <mat-error>Description is required</mat-error>
+                }
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Price</mat-label>
+                <input matInput type="number" formControlName="price">
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Category</mat-label>
+                <mat-select formControlName="typeId">
+                    @for (type of itemTypes; track type.id) {
+                    <mat-option [value]="type.id">{{type.name}}</mat-option>
+                    }
+                </mat-select>
+                @if (itemForm.controls['typeId'].invalid && itemForm.controls['typeId'].touched) {
+                <mat-error>Type is required</mat-error>
+                }
+            </mat-form-field>
+        </form>
+    </mat-card-content>
+    <mat-card-actions> 
+        @if( itemForm.value.id == 0) {
+            <button matButton="tonal" [disabled]="itemForm.invalid" (click)="add()"><mat-icon>save</mat-icon>Save</button>
+            } @else {
+            <button matButton="tonal" [disabled]="itemForm.invalid"
+                (click)="update(itemForm.value.id)"><mat-icon>save</mat-icon>Update</button>
+            }
+            <button matButton="outlined" (click)="reset()"><mat-icon>delete</mat-icon>Reset</button>
+        <button mat-button (click)="close()"><mat-icon>close</mat-icon>Close</button>
+    </mat-card-actions>
+</mat-card>

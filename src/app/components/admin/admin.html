@@ -1,0 +1,48 @@
+<button matButton="tonal" (click)="addUser()"><mat-icon>add</mat-icon>New user</button>
+<table mat-table [dataSource]="userList">
+    <tr mat-header-row *matHeaderRowDef="usersTableCols"></tr>
+    <tr mat-row *matRowDef="let row; columns: usersTableCols;"></tr>
+    <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef> ID </th>
+        <td mat-cell *matCellDef="let user"> {{user.id}} </td>
+    </ng-container>
+    <ng-container matColumnDef="role">
+        <th mat-header-cell *matHeaderCellDef> Role </th>
+        <td mat-cell *matCellDef="let user"> {{user.role}} </td>
+    </ng-container>
+    <ng-container matColumnDef="username">
+        <th mat-header-cell *matHeaderCellDef> Username </th>
+        <td mat-cell *matCellDef="let user"> {{user.username}} </td>
+    </ng-container>
+    <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef> Name </th>
+        <td mat-cell *matCellDef="let user"> {{user.name}} </td>
+    </ng-container>
+    <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef> Email </th>
+        <td mat-cell *matCellDef="let user"> {{user.email}} </td>
+    </ng-container>
+    <ng-container matColumnDef="phone">
+        <th mat-header-cell *matHeaderCellDef> Phone </th>
+        <td mat-cell *matCellDef="let user"> {{user.phone}} </td>
+    </ng-container>
+    <ng-container matColumnDef="balance">
+        <th mat-header-cell *matHeaderCellDef> Balance </th>
+        <td mat-cell *matCellDef="let user"> {{user.balance | monetary}} </td>
+    </ng-container>
+    <ng-container matColumnDef="active">
+        <th mat-header-cell *matHeaderCellDef> Active </th>
+        <td mat-cell *matCellDef="let user"> {{user.active ? "yes" : "no"}} </td>
+    </ng-container>
+    <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef> Actions </th>
+        <td mat-cell *matCellDef="let user">
+            <button matButton="outlined" (click)="editUser(user)">Edit</button>
+            @if (user.active) {
+            <button matButton="outlined" (click)="deactivateUser(user.id)">Deactivate</button>
+            } @else {
+            <button matButton="outlined" (click)="activateUser(user.id)">Activate</button>
+            }
+        </td>
+    </ng-container>
+</table>

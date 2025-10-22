@@ -1,0 +1,27 @@
+<mat-card>
+    <mat-card-header>
+        <mat-card-title>Login</mat-card-title>
+        <mat-card-subtitle>Please enter your credentials:</mat-card-subtitle>
+    </mat-card-header>
+    <form [formGroup]="loginForm">
+        <mat-card-content>
+            <mat-form-field>
+                <mat-label>Username</mat-label>
+                <input matInput type="text" formControlName="username">
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Password</mat-label>
+                <input matInput type="password" formControlName="password">
+            </mat-form-field>
+        </mat-card-content>
+        <mat-card-actions>
+            <button matButton="tonal" [disabled]="loginForm.invalid" (click)="login()">
+                <mat-icon>login</mat-icon>
+                Login
+            </button>
+        </mat-card-actions>
+    </form>
+    <mat-card-footer>
+        Don't have an account? You can register <a routerLink="../register">here</a>
+    </mat-card-footer>
+</mat-card>

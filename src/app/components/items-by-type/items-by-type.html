@@ -1,0 +1,10 @@
+<div class="row">
+    @for (x of items.value(); track $index) {
+        <div class="col-md-2">
+            <img [src]=path() class="img-fluid">
+            <span class="itemName">{{x.name}}</span>
+            <br/>
+            <span class="itemDesc">{{x.description}}</span>
+        </div>
+    }
+</div>

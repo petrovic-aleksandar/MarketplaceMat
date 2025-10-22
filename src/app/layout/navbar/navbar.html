@@ -1,0 +1,11 @@
+<mat-toolbar>
+    <span>Marketplace</span>
+    <div class="spacer"></div>
+    @if (authService.loggedUser() === "") {
+    <button mat-button routerLink="register"><mat-icon>add</mat-icon>Register</button>
+    <button mat-button routerLink="login"><mat-icon>login</mat-icon>Login</button>
+    } @else {
+    <button mat-button routerLink="user-settings"><mat-icon>person</mat-icon>{{authService.loggedUser()}}</button>
+    <button mat-button (click)="logout()"><mat-icon>logout</mat-icon>Logout</button>
+    }
+</mat-toolbar>
