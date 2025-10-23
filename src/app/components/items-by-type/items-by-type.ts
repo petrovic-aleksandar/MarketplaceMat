@@ -3,16 +3,18 @@ import { MatGridList, MatGridListModule, MatGridTile, MatGridTileText } from '@a
 import { GlobalService } from '../../service/global-service';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ItemType } from '../../model/item-type';
-import { MatAnchor, MatMiniFabButton } from "@angular/material/button";
+import { MatAnchor, MatButton, MatMiniFabButton } from "@angular/material/button";
 import { MatIcon } from "@angular/material/icon";
 import { Item } from '../../model/item';
 import { ItemService } from '../../service/item-service';
 import { MatSliderModule } from '@angular/material/slider';
 import { FormsModule, NgModel } from '@angular/forms';
+import { MatFormField, MatLabel } from "@angular/material/form-field";
+import { MatInput } from "@angular/material/input";
 
 @Component({
   selector: 'app-items-by-type',
-  imports: [MatGridListModule, MatAnchor, RouterLink, MatIcon, MatSliderModule, FormsModule],
+  imports: [MatGridListModule, MatAnchor, RouterLink, MatIcon, MatSliderModule, FormsModule, MatFormField, MatInput, MatLabel, MatButton],
   templateUrl: './items-by-type.html',
   styleUrl: './items-by-type.css'
 })

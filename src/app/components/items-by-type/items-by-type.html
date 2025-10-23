@@ -1,22 +1,29 @@
-<p><button matButton="tonal" routerLink="/item-types"><mat-icon>home</mat-icon>Back to types</button></p>
+<button matButton="tonal" routerLink="/item-types"><mat-icon>home</mat-icon>Back to types</button>
 
-<div>
-    <span> Filter by price: </span>
-    <input type="number" [min]="sliderMin" [max]="sliderMax" [(ngModel)]="sliderStartThumb">
-    <mat-slider [min]="sliderMin" [max]="sliderMax" (change)="filterByPrice()" showTickMarks>
-        <input [(value)]="sliderStartThumb" matSliderStartThumb>
-        <input [(value)]="sliderEndThumb" matSliderEndThumb>
-    </mat-slider>
-    <input type="number" [min]="sliderMin" [max]="sliderMax" [(ngModel)]="sliderEndThumb">
-</div>
-<div>
-    <span> Search by name or description: </span>
-    <input type="text" [(ngModel)]="searchText">
-    <button (click)="filterByText()">Search</button>
-    <button (click)="resetSearchText()">Reset</button>
-</div>
-
-<p></p>
+<mat-grid-list cols="2" rowHeight="100px">
+    <mat-grid-tile>
+        <mat-form-field>
+            <mat-label>Minimum price:</mat-label>
+            <input matInput type="number" [min]="sliderMin" [max]="sliderMax" [(ngModel)]="sliderStartThumb">
+        </mat-form-field>
+        <mat-slider class="slider" [min]="sliderMin" [max]="sliderMax" (change)="filterByPrice()">
+            <input [(value)]="sliderStartThumb" matSliderStartThumb>
+            <input [(value)]="sliderEndThumb" matSliderEndThumb>
+        </mat-slider>
+        <mat-form-field>
+            <mat-label>Maximum price:</mat-label>
+            <input matInput type="number" [min]="sliderMin" [max]="sliderMax" [(ngModel)]="sliderEndThumb">
+        </mat-form-field>
+    </mat-grid-tile>
+    <mat-grid-tile>
+        <mat-form-field>
+            <mat-label>Search by name or description:</mat-label>
+            <input matInput type="text" [(ngModel)]="searchText">
+        </mat-form-field>
+        <button matButton (click)="filterByText()">Search</button>
+        <button matButton (click)="resetSearchText()">Reset</button>
+    </mat-grid-tile>
+</mat-grid-list>
 
 <mat-grid-list cols="5">
     @for (item of items; track $index) {
