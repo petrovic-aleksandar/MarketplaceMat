@@ -1,0 +1,34 @@
+<mat-card>
+    <mat-card-header>
+        <mat-card-title>Images</mat-card-title>
+        <mat-card-subtitle>Manage item images</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+        <ul>
+            @for (image of images; track $index) {
+            <li>{{image}}</li>
+            }
+        </ul>
+
+        <input type="file" class="file-input" [accept]="requiredFileType" (change)="onFileSelected($event)" #fileUpload>
+
+        <div class="file-upload">
+            {{fileName || "No file uploaded yet."}}
+            <button matButton="tonal" mat-mini-fab color="primary" class="upload-btn" (click)="fileUpload.click()">
+                <mat-icon>attach_file</mat-icon>Choose file
+            </button>
+        </div>
+
+        <div class="progress">
+            @if (uploadProgress) {
+            <mat-progress-bar class="progress-bar" mode="determinate" [value]="uploadProgress" />
+            <mat-icon class="cancel-upload" (click)="cancelUpload()">delete_forever</mat-icon>
+            }
+        </div>
+
+    </mat-card-content>
+    <mat-card-actions>
+        <div class="spacer"></div>
+        <button mat-button (click)="close()"><mat-icon>close</mat-icon>Close</button>
+    </mat-card-actions>
+</mat-card>

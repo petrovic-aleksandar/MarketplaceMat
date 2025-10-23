@@ -4,6 +4,7 @@ import { UserDialog } from '../components/modal/user-dialog/user-dialog';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ItemDialog } from '../components/modal/item-dialog/item-dialog';
 import { Item } from '../model/item';
+import { ImagesDialog } from '../components/modal/images-dialog/images-dialog';
 
 @Injectable({
   providedIn: 'root'
@@ -24,13 +25,21 @@ export class GlobalService {
 
   userDialog(user?: User): MatDialogRef<UserDialog> {
     return this.dialog.open(UserDialog, {
+      disableClose: true,
       data: user ? user : null
     });
   }
 
   itemDialog(item?: Item): MatDialogRef<ItemDialog> {
     return this.dialog.open(ItemDialog, {
+      disableClose: true,
       data: item ? item : null
+    });
+  }
+
+  imagesDialog(item: Item): MatDialogRef<ImagesDialog> {
+    return this.dialog.open(ImagesDialog, {
+      data: item
     });
   }
   

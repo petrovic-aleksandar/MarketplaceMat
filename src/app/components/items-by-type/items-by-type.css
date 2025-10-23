@@ -1,8 +1,10 @@
-.itemName {
-    font-size: large;
-    font-weight: bold;
+.img {
+    max-height: -webkit-fill-available;
 }
 
-.itemDesc {
-    font-size: small;
+.buyBtn {
+    background-color: var(--mat-sys-inverse-primary);
+    color: blue;
+    padding: 8px !important;
+    border-radius: 15px;
 }

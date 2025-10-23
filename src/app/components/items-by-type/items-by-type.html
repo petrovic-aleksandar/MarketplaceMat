@@ -1,15 +1,34 @@
-<button matButton="tonal" routerLink="/item-types"><mat-icon>home</mat-icon>Back to types</button>
+<p><button matButton="tonal" routerLink="/item-types"><mat-icon>home</mat-icon>Back to types</button></p>
 
-<mat-grid-list cols="6">
+<div>
+    <span> Filter by price: </span>
+    <input type="number" [min]="sliderMin" [max]="sliderMax" [(ngModel)]="sliderStartThumb">
+    <mat-slider [min]="sliderMin" [max]="sliderMax" (change)="filterByPrice()" showTickMarks>
+        <input [(value)]="sliderStartThumb" matSliderStartThumb>
+        <input [(value)]="sliderEndThumb" matSliderEndThumb>
+    </mat-slider>
+    <input type="number" [min]="sliderMin" [max]="sliderMax" [(ngModel)]="sliderEndThumb">
+</div>
+<div>
+    <span> Search by name or description: </span>
+    <input type="text" [(ngModel)]="searchText">
+    <button (click)="filterByText()">Search</button>
+    <button (click)="resetSearchText()">Reset</button>
+</div>
+
+<p></p>
+
+<mat-grid-list cols="5">
+    @for (item of items; track $index) {
     <mat-grid-tile>
-        total items: {{items.isLoading()}} {{items.status()}}
+        <mat-grid-tile-header>
+            <span>{{item.name}}, {{item.description}}</span>
+        </mat-grid-tile-header>
+        <img [src]="path(item)" class="img">
+        <mat-grid-tile-footer>
+            <a class="buyBtn">Buy! {{item.price}}e</a>
+            <span>{{item.seller.name}}, {{item.seller.phone}}</span>
+        </mat-grid-tile-footer>
     </mat-grid-tile>
-    @for (x of items.value(); track $index) {
-        <mat-grid-tile>
-            <img [src]="path(x.path)" class="img-fluid">
-            <span class="itemName">{{x.name}}</span>
-            <br/>
-            <span class="itemDesc">{{x.description}}</span>
-        </mat-grid-tile>
     }
 </mat-grid-list>

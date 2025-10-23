@@ -1,8 +1,7 @@
-import { ChangeDetectorRef, Component, inject, OnInit, resource, signal } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 import { ItemService } from '../../service/item-service';
 import { Item } from '../../model/item';
-import { ItemType } from '../../model/item-type';
 import { DatePipe } from '@angular/common';
 import { AuthService } from '../../service/auth-service';
 import { GlobalService } from '../../service/global-service';
@@ -11,7 +10,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { MatButton } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
-import { ItemDialog } from '../modal/item-dialog/item-dialog';
 import { MatIcon } from '@angular/material/icon';
 
 @Component({
@@ -37,12 +35,16 @@ export class UserItems implements OnInit {
   }
 
   loadItemsByUser() {
-    this.itemService.getItemsByUser(this.authService.loggedUserId).subscribe({
+    this.itemService.getItemsByUserId(this.authService.loggedUserId).subscribe({
       next: (items) => {
         this.itemList = items as Item[]
         this.cdr.markForCheck()
       }
     })
+  }
+
+  images(item: Item) {
+    this.globalService.imagesDialog(item);
   }
 
   add() {

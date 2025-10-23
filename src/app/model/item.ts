@@ -11,5 +11,6 @@ export interface Item {
     active: boolean,
     createdAt: string,
     seller: User
+    frontImage: Image,
     images: Image[]
 }   

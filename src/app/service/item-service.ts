@@ -33,8 +33,12 @@ export class ItemService {
     return this.http.put(this.api + "Delete/" + id, null)
   }
 
-  getItemsByUser(sellerId:number) {
+  getItemsByUserId(sellerId:number) {
     return this.http.get(this.api + 'bySellerId/' + sellerId)
+  }
+
+  getItemsByTypeId(typeId:number) {
+    return this.http.get(this.api + 'byTypeId/' + typeId)
   }
 
   getItemTypes() {
