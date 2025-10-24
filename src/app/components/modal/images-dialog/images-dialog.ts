@@ -1,8 +1,7 @@
-import { Component, EventEmitter, Inject, inject, Input, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Inject, inject, Input, Output } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from "@angular/material/dialog";
 import { MatIcon } from "@angular/material/icon";
 import { Item } from '../../../model/item';
-import { Image } from '../../../model/image';
 import { MatButton } from '@angular/material/button';
 import { MatCard, MatCardHeader, MatCardTitle, MatCardSubtitle, MatCardActions, MatCardContent } from "@angular/material/card";
 import { HttpClient, HttpEventType } from '@angular/common/http';
@@ -10,10 +9,13 @@ import { GlobalService } from '../../../service/global-service';
 import { finalize, Subscription } from 'rxjs';
 import { MatProgressBar } from '@angular/material/progress-bar';
 import { ImageService } from '../../../service/image-service';
+import { MatGridList, MatGridTile, MatGridListModule } from "@angular/material/grid-list";
+import { Image } from '../../../model/image';
+import { MatTableModule } from '@angular/material/table';
 
 @Component({
   selector: 'app-images-dialog',
-  imports: [MatIcon, MatButton, MatCard, MatCardHeader, MatCardTitle, MatCardSubtitle, MatCardActions, MatCardContent, MatProgressBar],
+  imports: [MatIcon, MatButton, MatCard, MatCardHeader, MatCardTitle, MatCardSubtitle, MatCardActions, MatCardContent, MatProgressBar, MatGridListModule, MatGridTile, MatTableModule],
   templateUrl: './images-dialog.html',
   styleUrl: './images-dialog.scss'
 })
@@ -22,6 +24,7 @@ export class ImagesDialog {
   globalService = inject(GlobalService)
   imageService = inject(ImageService)
   http = inject(HttpClient)
+  cdr = inject(ChangeDetectorRef)
 
   dialogRef = inject(MatDialogRef)
 
@@ -34,10 +37,15 @@ export class ImagesDialog {
   uploadProgress: number | null = null;
   uploadSub: Subscription | null = null;
 
+  cols: string[] = ["path", "front", "actions"]
+  imageObjects: Image[] = []
+
   constructor(@Inject(MAT_DIALOG_DATA) item: Item) {
     if (item != null) {
       this.item = item;
+      console.log(this.item)
       this.loadItemImages(item)
+      this.cdr.markForCheck()
     }
   }
 
@@ -45,6 +53,7 @@ export class ImagesDialog {
     this.imageService.getByItemId(item.id).subscribe({
       next: (images) => {
         this.images = <string[]>images
+        this.cdr.markForCheck()
       }
     })
   }
@@ -89,6 +98,10 @@ export class ImagesDialog {
 
   close() {
     this.dialogRef.close()
+  }
+
+  path(path: string): string {
+    return this.globalService.getImagePath(this.item?.seller.id + "/" + this.item?.id + "/" + path)
   }
 
 }
