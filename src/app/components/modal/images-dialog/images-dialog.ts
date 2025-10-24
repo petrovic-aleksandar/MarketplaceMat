@@ -55,7 +55,8 @@ export class ImagesDialog {
     if (file) {
       this.fileName = file.name;
       const formData = new FormData();
-      formData.append("thumbnail", file);
+      formData.append("file", file);
+      formData.append("name", file.name);
 
       const upload$ = this.http.post(this.globalService.getApi("Image") + this.item?.id, formData, {
         reportProgress: true,
