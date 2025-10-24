@@ -13,5 +13,13 @@ export class ImageService {
   getByItemId(itemId: number) {
     return this.http.get(this.globalService.getApi("Image") + itemId)
   }
+
+  makeFront(itemId: number, imageId: number) {
+    return this.http.post(this.globalService.getApi("Image") + "front/" + imageId, null)
+  }
+
+  delete(id: number) {
+    return this.http.delete(this.globalService.getApi("Image") + id)
+  }
   
 }

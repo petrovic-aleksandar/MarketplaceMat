@@ -15,7 +15,7 @@ import { MatTableModule } from '@angular/material/table';
 
 @Component({
   selector: 'app-images-dialog',
-  imports: [MatIcon, MatButton, MatCard, MatCardHeader, MatCardTitle, MatCardSubtitle, MatCardActions, MatCardContent, MatProgressBar, MatGridListModule, MatGridTile, MatTableModule],
+  imports: [MatIcon, MatButton, MatCard, MatCardHeader, MatCardTitle, MatCardSubtitle, MatCardActions, MatCardContent, MatProgressBar, MatGridListModule, MatTableModule],
   templateUrl: './images-dialog.html',
   styleUrl: './images-dialog.scss'
 })
@@ -29,7 +29,8 @@ export class ImagesDialog {
   dialogRef = inject(MatDialogRef)
 
   item: Item | null = null
-  images: string[] = []
+  images: Image[] = []
+  image: Image | null = null
 
   @Input()
   requiredFileType: string | null = null;
@@ -38,21 +39,42 @@ export class ImagesDialog {
   uploadSub: Subscription | null = null;
 
   cols: string[] = ["path", "front", "actions"]
-  imageObjects: Image[] = []
 
   constructor(@Inject(MAT_DIALOG_DATA) item: Item) {
     if (item != null) {
       this.item = item;
-      console.log(this.item)
-      this.loadItemImages(item)
+      this.loadItemImages(this.item)
       this.cdr.markForCheck()
     }
+  }
+
+  view(i: Image) {
+    this.image = i
+  }
+
+  makeFront(i: Image) {
+    this.imageService.makeFront(this.item!.id, i.id).subscribe({
+      next: (result) => {
+        this.loadItemImages(this.item!)
+      }
+    })
+  }
+
+  delete(image: Image) {
+    this.imageService.delete(image.id).subscribe({
+      next: (result) => {
+        this.loadItemImages(this.item!)
+      }
+    })
   }
 
   loadItemImages(item: Item) {
     this.imageService.getByItemId(item.id).subscribe({
       next: (images) => {
-        this.images = <string[]>images
+        this.images = <Image[]>images
+        var frontImg = this.images.find(x => x.front == true)
+        if (frontImg)
+          this.image = frontImg
         this.cdr.markForCheck()
       }
     })
@@ -72,7 +94,10 @@ export class ImagesDialog {
         observe: 'events'
       })
         .pipe(
-          finalize(() => this.reset())
+          finalize(() => 
+            this.reset()
+        )
+          
         );
 
       this.uploadSub = upload$.subscribe(event => {
@@ -94,14 +119,15 @@ export class ImagesDialog {
       this.uploadProgress = null;
     if (this.uploadSub)
       this.uploadSub = null;
+    this.loadItemImages(this.item!);
   }
 
   close() {
     this.dialogRef.close()
   }
 
-  path(path: string): string {
-    return this.globalService.getImagePath(this.item?.seller.id + "/" + this.item?.id + "/" + path)
+  path(): string {
+    return this.globalService.getImagePath(this.item?.seller.id + "/" + this.item?.id + "/" + this.image?.path)
   }
 
 }

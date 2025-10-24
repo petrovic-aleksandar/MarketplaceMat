@@ -39,6 +39,7 @@ export class GlobalService {
 
   imagesDialog(item: Item): MatDialogRef<ImagesDialog> {
     return this.dialog.open(ImagesDialog, {
+      disableClose: true,
       data: item
     });
   }
