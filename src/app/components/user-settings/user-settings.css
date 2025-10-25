@@ -1,0 +1,7 @@
+mat-card {
+    width: 500px;
+}
+
+mat-card-actions {
+    padding-left: 15px;
+}
