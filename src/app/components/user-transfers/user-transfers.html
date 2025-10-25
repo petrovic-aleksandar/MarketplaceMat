@@ -4,27 +4,27 @@
     <tr mat-header-row *matHeaderRowDef="cols"></tr>
     <tr mat-row *matRowDef="let row; columns: cols;"></tr>
     <ng-container matColumnDef="amount">
-        <th mat-header-cell *matHeaderCellDef> Value </th>
-        <td mat-cell *matCellDef="let transfer"> {{transfer.value}} </td>
+        <th mat-header-cell *matHeaderCellDef> Amount </th>
+        <td mat-cell *matCellDef="let transfer"> {{transfer.amount}} </td>
     </ng-container>
     <ng-container matColumnDef="time">
         <th mat-header-cell *matHeaderCellDef> Time </th>
-        <td mat-cell *matCellDef="let transfer"> {{transfer.time}} </td>
+        <td mat-cell *matCellDef="let transfer"> {{transfer.time | date:"long"}} </td>
     </ng-container>
     <ng-container matColumnDef="type">
         <th mat-header-cell *matHeaderCellDef> Type </th>
-        <td mat-cell *matCellDef="let transfer"></td>
+        <td mat-cell *matCellDef="let transfer">{{transfer.type}}</td>
     </ng-container>
     <ng-container matColumnDef="buyer">
         <th mat-header-cell *matHeaderCellDef> Buyer </th>
-        <td mat-cell *matCellDef="let transfer"></td>
+        <td mat-cell *matCellDef="let transfer">{{transfer.buyer}}</td>
     </ng-container>
     <ng-container matColumnDef="seller">
         <th mat-header-cell *matHeaderCellDef> Seller </th>
-        <td mat-cell *matCellDef="let transfer"></td>
+        <td mat-cell *matCellDef="let transfer">{{transfer.seller}}</td>
     </ng-container>
     <ng-container matColumnDef="item">
         <th mat-header-cell *matHeaderCellDef> Item </th>
-        <td mat-cell *matCellDef="let transfer"></td>
+        <td mat-cell *matCellDef="let transfer">{{transfer.item}}</td>
     </ng-container>
 </table>
