@@ -19,3 +19,5 @@
 <p>{{item?.seller?.name}}</p>
 <p>{{item?.seller?.phone}}</p>
 <p>{{item?.seller?.email}}</p>
+
+<button matButton="tonal" [disabled]="authService.loggedUserId===item?.seller?.id" (click)="buy()"><mat-icon>shop</mat-icon>Buy now!</button>

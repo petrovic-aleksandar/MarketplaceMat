@@ -126,7 +126,7 @@ export class ImagesDialog {
   }
 
   path(): string {
-    return this.globalService.getImagePath(this.item?.seller.id + "/" + this.item?.id + "/" + this.image?.path)
+    return this.globalService.getImagePath(this.item?.id + "/" + this.image?.path)
   }
 
 }

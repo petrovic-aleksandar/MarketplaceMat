@@ -76,7 +76,7 @@ export class ItemsByType {
   path(item: Item): string {
     if (item.frontImage == null || item.frontImage.path == null)
       return this.defaultPath();
-    return this.globalService.getImagePath(item.seller.id + "/" + item.id + "/" + item.frontImage.path)
+    return this.globalService.getImagePath(item.id + "/" + item.frontImage.path)
   }
 
   defaultPath() {
