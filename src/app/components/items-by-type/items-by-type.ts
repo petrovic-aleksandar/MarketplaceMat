@@ -42,7 +42,7 @@ export class ItemsByType {
   }
 
   loadItems(typeId: number) {
-    this.itemService.getItemsByTypeId(typeId).subscribe({
+    this.itemService.getByTypeId(typeId).subscribe({
       next: (result) => {
         this.allItems = <Item[]>result
         this.items = this.allItems

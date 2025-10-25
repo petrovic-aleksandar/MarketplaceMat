@@ -9,13 +9,12 @@ import { GlobalService } from '../../../service/global-service';
 import { finalize, Subscription } from 'rxjs';
 import { MatProgressBar } from '@angular/material/progress-bar';
 import { ImageService } from '../../../service/image-service';
-import { MatGridList, MatGridTile, MatGridListModule } from "@angular/material/grid-list";
 import { Image } from '../../../model/image';
 import { MatTableModule } from '@angular/material/table';
 
 @Component({
   selector: 'app-images-dialog',
-  imports: [MatIcon, MatButton, MatCard, MatCardHeader, MatCardTitle, MatCardSubtitle, MatCardActions, MatCardContent, MatProgressBar, MatGridListModule, MatTableModule],
+  imports: [MatIcon, MatButton, MatCard, MatCardHeader, MatCardTitle, MatCardSubtitle, MatCardActions, MatCardContent, MatProgressBar, MatTableModule],
   templateUrl: './images-dialog.html',
   styleUrl: './images-dialog.scss'
 })

@@ -10,38 +10,42 @@ export class ItemService {
 
   http = inject(HttpClient)
   globalService = inject(GlobalService)
-  
-  readonly api:string = this.globalService.getApi("Item")
 
-  add(i:ItemReq) {
+  readonly api: string = this.globalService.getApi("Item")
+
+  add(i: ItemReq) {
     return this.http.post(this.api, i)
   }
 
-  update(id:number, i:ItemReq) { 
+  update(id: number, i: ItemReq) {
     return this.http.put(this.api + id, i)
   }
 
-  deactivate(id:number) {
+  deactivate(id: number) {
     return this.http.put(this.api + "Deactivate/" + id, null)
   }
 
-  activate(id:number) {
+  activate(id: number) {
     return this.http.put(this.api + "Activate/" + id, null)
   }
 
-  delete(id:number) {
+  delete(id: number) {
     return this.http.put(this.api + "Delete/" + id, null)
   }
 
-  getItemsByUserId(sellerId:number) {
+  getById(id: number) {
+    return this.http.get(this.api + id);
+  }
+
+  getByUserId(sellerId: number) {
     return this.http.get(this.api + 'bySellerId/' + sellerId)
   }
 
-  getItemsByTypeId(typeId:number) {
+  getByTypeId(typeId: number) {
     return this.http.get(this.api + 'byTypeId/' + typeId)
   }
 
-  getItemTypes() {
+  getTypes() {
     return this.http.get(this.api + "Types")
   }
 

@@ -1,4 +1,4 @@
-<button matButton="tonal" routerLink="/item-types"><mat-icon>home</mat-icon>Back to types</button>
+<button matButton="tonal" routerLink="/item-types"><mat-icon>home</mat-icon>Back to categories</button>
 
 <mat-grid-list cols="2" rowHeight="100px">
     <mat-grid-tile>
@@ -33,7 +33,7 @@
         </mat-grid-tile-header>
         <img [src]="path(item)" class="img">
         <mat-grid-tile-footer>
-            <a class="buyBtn">Buy! {{item.price}}e</a>
+            <a class="buyBtn" routerLink="/buy-item/{{item.id}}">Buy! {{item.price}}e</a>
             <span>{{item.seller.name}}, {{item.seller.phone}}</span>
         </mat-grid-tile-footer>
     </mat-grid-tile>

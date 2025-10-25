@@ -24,7 +24,7 @@ export class Admin implements OnInit {
   cdr = inject(ChangeDetectorRef)
 
   userList: User[] = []
-  usersTableCols: string[] = ['id', 'role', 'username', 'name', 'email', 'phone', 'role', 'active', 'actions'];
+  usersTableCols: string[] = ['id', 'role', 'username', 'name', 'email', 'phone', 'balance', 'active', 'actions'];
 
   ngOnInit() {
     this.loadUsers()
@@ -45,6 +45,12 @@ export class Admin implements OnInit {
 
   editUser(user: User) {
     this.globalService.userDialog(user).afterClosed().subscribe(() => {
+      this.loadUsers()
+    })
+  }
+
+  userTransfers(user: User) {
+    this.globalService.transfersDialog(user).afterClosed().subscribe(() => {
       this.loadUsers()
     })
   }

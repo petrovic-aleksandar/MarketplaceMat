@@ -5,6 +5,7 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ItemDialog } from '../components/modal/item-dialog/item-dialog';
 import { Item } from '../model/item';
 import { ImagesDialog } from '../components/modal/images-dialog/images-dialog';
+import { TransfersDialog } from '../components/modal/transfers-dialog/transfers-dialog';
 
 @Injectable({
   providedIn: 'root'
@@ -41,6 +42,13 @@ export class GlobalService {
     return this.dialog.open(ImagesDialog, {
       disableClose: true,
       data: item
+    });
+  }
+
+  transfersDialog(user: User): MatDialogRef<TransfersDialog> {
+    return this.dialog.open(TransfersDialog, {
+      disableClose: true,
+      data: user
     });
   }
   

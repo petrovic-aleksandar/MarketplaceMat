@@ -25,7 +25,7 @@ export class ItemDialog {
   authService = inject(AuthService)
   http = inject(HttpClient)
   cdr = inject(ChangeDetectorRef)
-
+  
   dialogRef = inject(MatDialogRef)
 
   itemTypes: ItemType[] = []
@@ -46,7 +46,7 @@ export class ItemDialog {
   }
 
   loadItemTypes() {
-    this.itemService.getItemTypes().subscribe({
+    this.itemService.getTypes().subscribe({
       next: (types) => {
         this.itemTypes = types as ItemType[]
         this.cdr.markForCheck()

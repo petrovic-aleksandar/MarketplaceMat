@@ -4,6 +4,7 @@
     <a mat-button routerLink="homepage"><mat-icon>home</mat-icon>Homepage</a>
     @if (authService.loggedUserRole() === "User" || authService.loggedUserRole() === "Admin") {
     <a mat-button routerLink="user-items"><mat-icon>list</mat-icon>My Items</a>
+    <a mat-button routerLink="user-transfers"><mat-icon>history</mat-icon>My Transfers</a>
     }
     @if (authService.loggedUserRole() === "Admin") {
     <a mat-button routerLink="admin"><mat-icon>settings</mat-icon>Admin</a>

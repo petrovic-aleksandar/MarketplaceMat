@@ -9,6 +9,8 @@ import { ItemTypes } from './components/item-types/item-types';
 import { ItemsByType } from './components/items-by-type/items-by-type';
 import { Login } from './components/login/login';
 import { Register } from './components/register/register';
+import { BuyItem } from './components/buy-item/buy-item';
+import { UserTransfers } from './components/user-transfers/user-transfers';
 
 export const routes: Routes = [
     {
@@ -26,6 +28,11 @@ export const routes: Routes = [
         canActivate: [authGuard]
     },
     {
+        path: 'user-transfers',
+        component: UserTransfers,
+        canActivate: [authGuard]
+    },
+    {
         path: 'user-settings',
         component: UserSettings,
         canActivate: [authGuard]
@@ -37,6 +44,10 @@ export const routes: Routes = [
     {
         path: 'items-by-type/:id',
         component: ItemsByType
+    },
+    {
+        path: 'buy-item/:id',
+        component: BuyItem
     },
     {
         path: 'login',

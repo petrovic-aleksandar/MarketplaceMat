@@ -35,7 +35,7 @@ export class UserItems implements OnInit {
   }
 
   loadItemsByUser() {
-    this.itemService.getItemsByUserId(this.authService.loggedUserId).subscribe({
+    this.itemService.getByUserId(this.authService.loggedUserId).subscribe({
       next: (items) => {
         this.itemList = items as Item[]
         this.cdr.markForCheck()

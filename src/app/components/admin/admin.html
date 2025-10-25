@@ -38,6 +38,7 @@
         <th mat-header-cell *matHeaderCellDef> Actions </th>
         <td mat-cell *matCellDef="let user">
             <button matButton="outlined" (click)="editUser(user)">Edit</button>
+            <button matButton="outlined" (click)="userTransfers(user)">Transfers</button>
             @if (user.active) {
             <button matButton="outlined" (click)="deactivateUser(user.id)">Deactivate</button>
             } @else {

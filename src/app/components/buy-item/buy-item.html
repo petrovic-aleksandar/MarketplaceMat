@@ -1,0 +1,21 @@
+<button matButton="tonal" routerLink="/items-by-type/{{item?.type?.id}}"><mat-icon>arrow_back</mat-icon>Back to
+    {{item?.type?.name}}</button>
+<button matButton="tonal" routerLink="/item-types"><mat-icon>home</mat-icon>Back to categories</button>
+
+<h2>{{item?.name}}</h2>
+<h4>{{item?.description}}</h4>
+
+<mat-grid-list cols="5">
+    @for (image of images; track $index) {
+    <mat-grid-tile>
+        <img [src]="path(image.path)" class="img">
+        <mat-grid-tile-footer>
+            {{image.path}}
+        </mat-grid-tile-footer>
+    </mat-grid-tile>
+    }
+</mat-grid-list>
+
+<p>{{item?.seller?.name}}</p>
+<p>{{item?.seller?.phone}}</p>
+<p>{{item?.seller?.email}}</p>

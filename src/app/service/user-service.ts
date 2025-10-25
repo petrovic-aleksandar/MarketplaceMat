@@ -14,6 +14,10 @@ export class UserService {
 
   readonly api:string = this.globalService.getApi("User")
 
+  getById(id: number) {
+    return this.http.get(this.api + id)
+  }
+
   getAll() {
     return this.http.get(this.api)
   }

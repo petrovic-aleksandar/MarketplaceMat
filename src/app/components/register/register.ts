@@ -56,7 +56,6 @@ export class Register {
         if (err.status == 409) {
           alert("Username already exists. Please choose another username.")
         } else {
-          console.log(err)
           alert("error: " + err.error)
         }
       }

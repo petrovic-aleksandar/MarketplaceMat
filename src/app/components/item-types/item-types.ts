@@ -3,6 +3,7 @@ import { GlobalService } from '../../service/global-service';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { RouterLink } from "@angular/router";
 import { MatButtonModule } from "@angular/material/button";
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-item-types',
