@@ -13,11 +13,11 @@ import { MatFormField, MatLabel } from "@angular/material/form-field";
 import { MatInput } from "@angular/material/input";
 import { MatSelectModule } from "@angular/material/select";
 import { TransferReq } from '../../../model/request/transfer-req';
-import { DatePipe } from '@angular/common';
+import { DatePipe, NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-transfers-dialog',
-  imports: [ReactiveFormsModule, MatTableModule, MatCard, MatCardHeader, MatCardContent, MatCardActions, MatIcon, MatButton, MatFormField, MatInput, MatLabel, MatSelectModule, MatCardTitle, MatCardSubtitle, DatePipe],
+  imports: [ReactiveFormsModule, MatTableModule, MatCard, MatCardHeader, MatCardContent, MatCardActions, MatIcon, MatButton, MatFormField, MatInput, MatLabel, MatSelectModule, MatCardTitle, MatCardSubtitle, DatePipe, NgClass],
   templateUrl: './transfers-dialog.html',
   styleUrl: './transfers-dialog.scss'
 })

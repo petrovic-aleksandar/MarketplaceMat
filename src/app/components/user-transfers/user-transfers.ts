@@ -5,11 +5,11 @@ import { AuthService } from '../../service/auth-service';
 import { TransferService } from '../../service/transfer-service';
 import { User } from '../../model/user';
 import { UserService } from '../../service/user-service';
-import { DatePipe } from '@angular/common';
+import { DatePipe, NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-user-transfers',
-  imports: [MatTableModule, DatePipe],
+  imports: [MatTableModule, DatePipe, NgClass],
   templateUrl: './user-transfers.html',
   styleUrl: './user-transfers.scss'
 })

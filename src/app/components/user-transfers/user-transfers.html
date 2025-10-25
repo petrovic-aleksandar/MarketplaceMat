@@ -2,10 +2,18 @@
 
 <table mat-table [dataSource]="transfers">
     <tr mat-header-row *matHeaderRowDef="cols"></tr>
-    <tr mat-row *matRowDef="let row; columns: cols;"></tr>
+    <tr mat-row *matRowDef="let row; columns: cols;"
+        [ngClass]="{ 'transferMinus': row.buyer != null, 'transferPlus': row.seller != null}"></tr>
     <ng-container matColumnDef="amount">
         <th mat-header-cell *matHeaderCellDef> Amount </th>
-        <td mat-cell *matCellDef="let transfer"> {{transfer.amount}} </td>
+        <td mat-cell *matCellDef="let transfer">
+            @if(transfer.buyer != null) {
+            +
+            }
+            @if(transfer.seller != null) {
+            -
+            }
+            {{transfer.amount}} </td>
     </ng-container>
     <ng-container matColumnDef="time">
         <th mat-header-cell *matHeaderCellDef> Time </th>
