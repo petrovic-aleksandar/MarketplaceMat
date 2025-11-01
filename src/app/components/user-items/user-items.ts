@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ItemService } from '../../service/item-service';
 import { Item } from '../../model/item';
-import { DatePipe } from '@angular/common';
+import { DatePipe, NgClass } from '@angular/common';
 import { AuthService } from '../../service/auth-service';
 import { GlobalService } from '../../service/global-service';
 import { HttpClient } from '@angular/common/http';
@@ -14,7 +14,7 @@ import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-user-items',
-  imports: [ReactiveFormsModule, DatePipe, MatSelectModule, MatTableModule, MatButton, MatIcon],
+  imports: [ReactiveFormsModule, DatePipe, MatSelectModule, MatTableModule, NgClass, MatButton, MatIcon],
   templateUrl: './user-items.html',
   styleUrl: './user-items.css'
 })
