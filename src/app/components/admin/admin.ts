@@ -9,10 +9,11 @@ import { MatTableModule } from '@angular/material/table';
 import { MatButton } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-admin',
-  imports: [ReactiveFormsModule, MonetaryPipe, MatSelectModule, MatTableModule, MatButton, MatIcon],
+  imports: [ReactiveFormsModule, MonetaryPipe, MatSelectModule, MatTableModule, NgClass, MatButton, MatIcon],
   templateUrl: './admin.html',
   styleUrl: './admin.css'
 })

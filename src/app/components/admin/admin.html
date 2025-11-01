@@ -1,7 +1,7 @@
 <button matButton="tonal" (click)="addUser()"><mat-icon>add</mat-icon>New user</button>
 <table mat-table [dataSource]="userList">
     <tr mat-header-row *matHeaderRowDef="usersTableCols"></tr>
-    <tr mat-row *matRowDef="let row; columns: usersTableCols;"></tr>
+    <tr mat-row *matRowDef="let row; columns: usersTableCols;" [ngClass]="{'inactive' : !row.active}"></tr>
     <ng-container matColumnDef="id">
         <th mat-header-cell *matHeaderCellDef> ID </th>
         <td mat-cell *matCellDef="let user"> {{user.id}} </td>
