@@ -28,19 +28,11 @@
             </ng-container>
         </table>
 
-        <input type="file" class="file-input" [accept]="requiredFileType" (change)="onFileSelected($event)" #fileUpload>
-
+        <input type="file" class="file-input" (change)="onFileSelected($event)" #fileUpload>
         <div class="file-upload">
             <button matButton="tonal" mat-mini-fab color="primary" class="upload-btn" (click)="fileUpload.click()">
-                <mat-icon>attach_file</mat-icon>Update new image
+                <mat-icon>attach_file</mat-icon>Upload new image
             </button>
-        </div>
-
-        <div class="progress">
-            @if (uploadProgress) {
-            <mat-progress-bar class="progress-bar" mode="determinate" [value]="uploadProgress" />
-            <mat-icon class="cancel-upload" (click)="cancelUpload()">delete_forever</mat-icon>
-            }
         </div>
 
     </mat-card-content>

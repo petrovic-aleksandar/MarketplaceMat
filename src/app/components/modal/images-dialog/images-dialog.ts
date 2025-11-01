@@ -4,17 +4,16 @@ import { MatIcon } from "@angular/material/icon";
 import { Item } from '../../../model/item';
 import { MatButton } from '@angular/material/button';
 import { MatCard, MatCardHeader, MatCardTitle, MatCardSubtitle, MatCardActions, MatCardContent } from "@angular/material/card";
-import { HttpClient, HttpEventType } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { GlobalService } from '../../../service/global-service';
-import { finalize, Subscription } from 'rxjs';
-import { MatProgressBar } from '@angular/material/progress-bar';
+import { finalize, } from 'rxjs';
 import { ImageService } from '../../../service/image-service';
 import { Image } from '../../../model/image';
 import { MatTableModule } from '@angular/material/table';
 
 @Component({
   selector: 'app-images-dialog',
-  imports: [MatIcon, MatButton, MatCard, MatCardHeader, MatCardTitle, MatCardSubtitle, MatCardActions, MatCardContent, MatProgressBar, MatTableModule],
+  imports: [MatIcon, MatButton, MatCard, MatCardHeader, MatCardTitle, MatCardSubtitle, MatCardActions, MatCardContent, MatTableModule],
   templateUrl: './images-dialog.html',
   styleUrl: './images-dialog.scss'
 })
@@ -31,11 +30,7 @@ export class ImagesDialog {
   images: Image[] = []
   image: Image | null = null
 
-  @Input()
-  requiredFileType: string | null = null;
   fileName = '';
-  uploadProgress: number | null = null;
-  uploadSub: Subscription | null = null;
 
   cols: string[] = ["path", "front", "actions"]
 
@@ -88,36 +83,15 @@ export class ImagesDialog {
       formData.append("file", file);
       formData.append("name", file.name);
 
-      const upload$ = this.http.post(this.globalService.getApi("Image") + this.item?.id, formData, {
-        reportProgress: true,
-        observe: 'events'
-      })
-        .pipe(
-          finalize(() => 
-            this.reset()
-        )
-          
-        );
-
-      this.uploadSub = upload$.subscribe(event => {
-        if (event.type == HttpEventType.UploadProgress && event.total) {
-          this.uploadProgress = Math.round(100 * (event.loaded / event.total));
+      this.http.post(this.globalService.getApi("Image") + this.item?.id, formData).subscribe({
+        next: (result) => {
+          this.reset()
         }
-      })
+      });
     }
   }
 
-  cancelUpload() {
-    if (this.uploadSub)
-      this.uploadSub.unsubscribe();
-    this.reset();
-  }
-
   reset() {
-    if (this.uploadProgress)
-      this.uploadProgress = null;
-    if (this.uploadSub)
-      this.uploadSub = null;
     this.loadItemImages(this.item!);
   }
 
