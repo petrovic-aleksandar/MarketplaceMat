@@ -6,7 +6,6 @@ import { MatButton } from '@angular/material/button';
 import { MatCard, MatCardHeader, MatCardTitle, MatCardSubtitle, MatCardActions, MatCardContent } from "@angular/material/card";
 import { HttpClient } from '@angular/common/http';
 import { GlobalService } from '../../../service/global-service';
-import { finalize, } from 'rxjs';
 import { ImageService } from '../../../service/image-service';
 import { Image } from '../../../model/image';
 import { MatTableModule } from '@angular/material/table';
