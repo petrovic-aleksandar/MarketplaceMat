@@ -1,11 +1,11 @@
-import { ChangeDetectorRef, Component, inject, Inject } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, Inject, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { User } from '../../../model/user';
 import { TransferService } from '../../../service/transfer-service';
 import { UserService } from '../../../service/user-service';
 import { Transfer } from '../../../model/transfer';
-import { MatTableModule } from '@angular/material/table';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatCard, MatCardHeader, MatCardContent, MatCardActions, MatCardTitle, MatCardSubtitle } from "@angular/material/card";
 import { MatIcon } from "@angular/material/icon";
 import { MatButton } from '@angular/material/button';
@@ -14,10 +14,11 @@ import { MatInput } from "@angular/material/input";
 import { MatSelectModule } from "@angular/material/select";
 import { TransferReq } from '../../../model/request/transfer-req';
 import { DatePipe, NgClass } from '@angular/common';
+import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-transfers-dialog',
-  imports: [ReactiveFormsModule, MatTableModule, MatCard, MatCardHeader, MatCardContent, MatCardActions, MatIcon, MatButton, MatFormField, MatInput, MatLabel, MatSelectModule, MatCardTitle, MatCardSubtitle, DatePipe, NgClass],
+  imports: [ReactiveFormsModule, MatTableModule, MatPaginator, MatCard, MatCardHeader, MatCardContent, MatCardActions, MatIcon, MatButton, MatFormField, MatInput, MatLabel, MatSelectModule, MatCardTitle, MatCardSubtitle, DatePipe, NgClass],
   templateUrl: './transfers-dialog.html',
   styleUrl: './transfers-dialog.scss'
 })
@@ -30,9 +31,11 @@ export class TransfersDialog {
   dialogRef = inject(MatDialogRef)
 
   transfers: Transfer[] = []
+  transfersDS = new MatTableDataSource<any>(this.transfers);
   user: User | null = null
 
   cols = ["amount", "time", "type", "buyer", "seller", "item"]
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   transferForm: FormGroup = new FormGroup({
     type: new FormControl(null, Validators.required),
@@ -64,6 +67,8 @@ export class TransfersDialog {
     this.transferService.getByUserId(userId).subscribe({
       next: (transfers) => {
         this.transfers = <Transfer[]>transfers
+        this.transfersDS = new MatTableDataSource<any>(this.transfers);
+        this.transfersDS.paginator = this.paginator;
         this.cdr.markForCheck()
       }
     })
