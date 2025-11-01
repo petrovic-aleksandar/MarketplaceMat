@@ -47,7 +47,7 @@ export class GlobalService {
 
   transfersDialog(user: User): MatDialogRef<TransfersDialog> {
     return this.dialog.open(TransfersDialog, {
-      disableClose: true,
+      disableClose: false,
       data: user
     });
   }
