@@ -4,4 +4,5 @@ Build and run commands
 
 <code>docker run -d -p 4200:80 marketplace-mat</code>
 
-predefined user admin admin123
+predefined user with password: <b>admin admin123</b>
+
