@@ -6,3 +6,6 @@ Build and run commands
 
 predefined user with password: <b>admin admin123</b>
 
+Project is done in Angular 20, using Material components
+
+
