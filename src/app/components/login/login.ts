@@ -52,9 +52,9 @@ export class Login {
       },
       (error: HttpErrorResponse) => {
         if (error.status == 401)
-          alert("Wrong password")
-        if (error.status == 400)
           alert("Wrong credentials")
+        if (error.status == 400)
+          alert("Bad request")
       })
   }
 }
