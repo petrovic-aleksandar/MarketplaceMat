@@ -1,7 +1,7 @@
 {
-  "activeConfig": "local",
+  "activeConfig": "spring-local",
   "configs": {
-    "local": {
+    "spring-local": {
       "baseApiUrl": "http://localhost:8080/api/",
       "imagePath": "http://localhost:80/"
     },
