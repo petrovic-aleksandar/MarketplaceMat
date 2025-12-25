@@ -1,0 +1,21 @@
+{
+  "activeConfig": "local",
+  "configs": {
+    "local": {
+      "baseApiUrl": "http://localhost:8080/api/",
+      "imagePath": "http://localhost:80/"
+    },
+    "java": {
+      "baseApiUrl": "http://localhost:8080/marketplace-java/api/v1/",
+      "imagePath": "http://localhost:80/"
+    },
+    "dotnet": {
+      "baseApiUrl": "https://localhost:7294/api/",
+      "imagePath": "http://localhost:80/"
+    },
+    "node": {
+      "baseApiUrl": "https://localhost:8081/api/",
+      "imagePath": "http://localhost:80/"
+    }
+  }
+}

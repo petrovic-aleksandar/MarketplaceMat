@@ -1,4 +1,5 @@
 import { inject, Injectable } from '@angular/core';
+import { API_CONFIG } from '../api.config';
 import { User } from '../model/user';
 import { UserDialog } from '../components/modal/user-dialog/user-dialog';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
@@ -14,15 +15,12 @@ export class GlobalService {
 
   dialog = inject(MatDialog)
 
-  getApi (path:string) {
-    //return "https://localhost:7294/api/" + path + "/"
-    //return "https://localhost:8081/api/" + path + "/"
-    //return "http://localhost:8080/marketplace-java/api/v1/" + path + "/"
-    return "http://localhost:8080/api/" + path + "/"
+  getApi(path: string) {
+    return API_CONFIG.baseApiUrl + path + "/";
   }
 
-  getImagePath(path:string) {
-    return "http://localhost:80/"+ path
+  getImagePath(path: string) {
+    return API_CONFIG.imagePath + path;
   }
 
   userDialog(user?: User): MatDialogRef<UserDialog> {
