@@ -72,7 +72,7 @@ export class BuyItem {
     }
     this.transferService.addPurchase(t).subscribe({
       next: (result) => {
-        alert("Purchase successful! The purchase amount was subtracted from your amount, and item has been moved to your posession. You will be redirected to your items page, where you will find yuour new item :)")
+        alert("Purchase successful! The purchase amount was subtracted from your amount, and item has been moved to your possession. You will be redirected to your items page, where you will find your new item :)")
         this.router.navigateByUrl("/user-items")
       },
       error: (err) => {
