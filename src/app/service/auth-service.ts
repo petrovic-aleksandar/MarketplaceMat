@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, Signal, signal } from '@angular/core';
-import { User } from '../model/user';
 import { RegUser } from '../model/request/reg-user';
 import { LoginUser } from '../model/request/login-user';
 import { GlobalService } from './global-service';
+import { UserReq } from '../model/request/user-req';
 
 @Injectable({
   providedIn: 'root'
@@ -25,6 +25,14 @@ export class AuthService {
 
   register(ru:RegUser) {
     return this.http.post(this.api + "register", ru)
+  }
+
+  selfInfo() {
+    return this.http.get(this.api + "self-info/" + this.loggedUserId)
+  }
+
+  updateSelf(usr:UserReq) {
+    return this.http.post(this.api + "update-self/" + this.loggedUserId , usr)
   }
 
   readLoggedUserFromStorage() {

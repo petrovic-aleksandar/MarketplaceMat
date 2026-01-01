@@ -43,7 +43,7 @@ export class UserSettings implements OnInit {
   }
 
   loadUser() {
-    this.userService.getById(this.authService.loggedUserId).subscribe({
+    this.authService.selfInfo().subscribe({
       next: (user) => {
         this.user = <User>user
         this.resetProfile()
@@ -62,7 +62,7 @@ export class UserSettings implements OnInit {
   }
 
   updateProfile() {
-    this.userService.update({
+    this.authService.updateSelf({
       username: this.userForm.value.username,
       password: "",
       updatePassword: false,
@@ -70,7 +70,7 @@ export class UserSettings implements OnInit {
       email: this.userForm.value.email,
       phone: this.userForm.value.phone,
       role: this.user!.role
-    }, this.user!.id).subscribe({
+    }).subscribe({
       next: (result) => {
         alert("Your profile data was succesfully updated.")
         this.loadUser()
@@ -80,7 +80,7 @@ export class UserSettings implements OnInit {
   }
 
   updatePassword() {
-    this.userService.update({
+    this.authService.updateSelf({
       username: this.user!.username,
       password: this.passwordForm.value.password,
       updatePassword: true,
@@ -88,7 +88,7 @@ export class UserSettings implements OnInit {
       email: this.user!.email,
       phone: this.user!.phone,
       role: this.user!.role
-    }, this.user!.id).subscribe({
+    }).subscribe({
       next: (result) => {
         alert("Your password was succesfully updated. Please log in with your new credentials.")
       localStorage.clear()
