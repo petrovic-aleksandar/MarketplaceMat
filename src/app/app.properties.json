@@ -11,7 +11,7 @@
     },
     "spring-azure": {
       "baseApiUrl": "https://marketplace-spring-g0euffa2dxggewbe.italynorth-01.azurewebsites.net//api/",
-      "imagePath": "https://marketplaceimages.z38.web.core.windows.net/"
+      "imagePath": "https://marketplaceimages.z38.web.core.windows.net/images/"
     },
     "javaee-local": {
       "baseApiUrl": "http://localhost:8080/marketplace-java/api/v1/",
