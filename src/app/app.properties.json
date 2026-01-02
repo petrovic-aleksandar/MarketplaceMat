@@ -1,5 +1,5 @@
 {
-  "activeConfig": "spring-local",
+  "activeConfig": "spring-azure",
   "configs": {
     "spring-local": {
       "baseApiUrl": "http://localhost:8080/api/",
