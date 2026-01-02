@@ -29,8 +29,24 @@ jobs:
           cache: npm
       - name: Install dependencies
         run: npm install
+      - name: Diagnostic - Check workspace structure before build
+        run: |
+          echo "Current directory:"
+          pwd
+          echo "Directory structure:"
+          ls -la
+          echo "Checking if dist exists:"
+          ls -la dist/ || echo "dist/ does not exist yet"
       - name: Build app
         run: npm run build -- --configuration=production
+      - name: Diagnostic - Check build output
+        run: |
+          echo "Build completed. Checking dist directory:"
+          ls -la dist/
+          echo "Checking Marketplace-Mat directory:"
+          ls -la dist/Marketplace-Mat/ || echo "dist/Marketplace-Mat/ not found"
+          echo "Full directory tree of dist:"
+          find dist/ -type f
       - name: Install OIDC Client from Core Package
         run: npm install @actions/core@1.6.0 @actions/http-client
       - name: Get Id Token
@@ -51,7 +67,7 @@ jobs:
           # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
           app_location: "/" # App source code path
           api_location: "" # Api source code path - optional
-          output_location: "/home/runner/work/MarketplaceMat/MarketplaceMat/dist/Marketplace-Mat" # Built app content directory - Angular output
+          output_location: "dist/Marketplace-Mat" # Built app content directory - Angular output
           skip_app_build: true
           github_id_token: ${{ steps.idtoken.outputs.result }}
           ###### End of Repository/Build Configurations ######
