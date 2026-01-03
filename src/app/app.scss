@@ -1,5 +1,12 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
 .mat-sidenav-container {
-  height: -webkit-fill-available;
+  flex: 1;
+  overflow: hidden;
 }
 
 .mat-sidenav {
