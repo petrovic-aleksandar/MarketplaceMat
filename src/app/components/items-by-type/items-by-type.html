@@ -33,7 +33,7 @@
         </mat-grid-tile-header>
         <img [src]="path(item)" class="img">
         <mat-grid-tile-footer>
-            <a class="buyBtn" routerLink="/buy-item/{{item.id}}">Buy! {{item.price}}e</a>
+            <a class="buyBtn" (click)="buy(item.id)">Buy! {{item.price}}e</a>
             <span>{{item.seller.name}}, {{item.seller.phone}}</span>
         </mat-grid-tile-footer>
     </mat-grid-tile>

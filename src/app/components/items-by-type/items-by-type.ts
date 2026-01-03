@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, inject, NgModule, OnInit, resource } from '@angular/core';
 import { MatGridList, MatGridListModule, MatGridTile, MatGridTileText } from '@angular/material/grid-list';
 import { GlobalService } from '../../service/global-service';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ItemType } from '../../model/item-type';
 import { MatAnchor, MatButton, MatMiniFabButton } from "@angular/material/button";
 import { MatIcon } from "@angular/material/icon";
@@ -11,6 +11,7 @@ import { MatSliderModule } from '@angular/material/slider';
 import { FormsModule, NgModel } from '@angular/forms';
 import { MatFormField, MatLabel } from "@angular/material/form-field";
 import { MatInput } from "@angular/material/input";
+import { AuthService } from '../../service/auth-service';
 
 @Component({
   selector: 'app-items-by-type',
@@ -23,6 +24,8 @@ export class ItemsByType {
   globalService = inject(GlobalService)
   itemService = inject(ItemService)
   cdr = inject(ChangeDetectorRef)
+  authService = inject(AuthService)
+  router = inject(Router)
 
   type: ItemType | null = null
   typeId: number | null = null
@@ -81,6 +84,14 @@ export class ItemsByType {
 
   defaultPath() {
     return this.globalService.getImagePath("default.jpg")
+  }
+
+  buy(itemId: number) {
+    if (this.authService.loggedUser() === "") {
+      this.router.navigate(['/login'])
+    } else {
+      this.router.navigate(['/buy-item', itemId])
+    }
   }
 
 }
