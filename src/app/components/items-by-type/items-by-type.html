@@ -4,38 +4,48 @@
     <mat-grid-tile>
         <mat-form-field>
             <mat-label>Minimum price:</mat-label>
-            <input matInput type="number" [min]="sliderMin" [max]="sliderMax" [(ngModel)]="sliderStartThumb">
+            <input matInput type="number" [min]="sliderMin" [max]="sliderMax" [(ngModel)]="sliderStartThumbValue">
         </mat-form-field>
-        <mat-slider class="slider" [min]="sliderMin" [max]="sliderMax" (change)="filterByPrice()">
-            <input [(value)]="sliderStartThumb" matSliderStartThumb>
-            <input [(value)]="sliderEndThumb" matSliderEndThumb>
+        <mat-slider class="slider" [min]="sliderMin" [max]="sliderMax">
+            <input [(value)]="sliderStartThumbValue" matSliderStartThumb>
+            <input [(value)]="sliderEndThumbValue" matSliderEndThumb>
         </mat-slider>
         <mat-form-field>
             <mat-label>Maximum price:</mat-label>
-            <input matInput type="number" [min]="sliderMin" [max]="sliderMax" [(ngModel)]="sliderEndThumb">
+            <input matInput type="number" [min]="sliderMin" [max]="sliderMax" [(ngModel)]="sliderEndThumbValue">
         </mat-form-field>
     </mat-grid-tile>
     <mat-grid-tile>
         <mat-form-field>
             <mat-label>Search by name or description:</mat-label>
-            <input matInput type="text" [(ngModel)]="searchText">
+            <input matInput type="text" [(ngModel)]="searchTextValue">
         </mat-form-field>
-        <button matButton (click)="filterByText()">Search</button>
         <button matButton (click)="resetSearchText()">Reset</button>
     </mat-grid-tile>
 </mat-grid-list>
 
-<mat-grid-list cols="5">
-    @for (item of items; track $index) {
-    <mat-grid-tile>
-        <mat-grid-tile-header>
-            <span>{{item.name}}, {{item.description}}</span>
-        </mat-grid-tile-header>
-        <img [src]="path(item)" class="img">
-        <mat-grid-tile-footer>
-            <a class="buyBtn" (click)="buy(item.id)">Buy! {{item.price}}e</a>
-            <span>{{item.seller.name}}, {{item.seller.phone}}</span>
-        </mat-grid-tile-footer>
-    </mat-grid-tile>
-    }
-</mat-grid-list>
+@if (loading()) {
+    <div class="state">
+        <mat-progress-spinner aria-label="Loading items" mode="indeterminate" diameter="48"></mat-progress-spinner>
+        <div>Loading items...</div>
+    </div>
+} @else if (error()) {
+    <div class="state error">{{ error() }}</div>
+} @else if (!items().length) {
+    <div class="state">No items found for this type.</div>
+} @else {
+    <mat-grid-list cols="5">
+        @for (item of items(); track item.id) {
+        <mat-grid-tile>
+            <mat-grid-tile-header>
+                <span>{{item.name}}, {{item.description}}</span>
+            </mat-grid-tile-header>
+            <img [src]="path(item)" class="img">
+            <mat-grid-tile-footer>
+                <a class="buyBtn" (click)="buy(item.id)">Buy! {{item.price}}e</a>
+                <span>{{item.seller.name}}, {{item.seller.phone}}</span>
+            </mat-grid-tile-footer>
+        </mat-grid-tile>
+        }
+    </mat-grid-list>
+}
