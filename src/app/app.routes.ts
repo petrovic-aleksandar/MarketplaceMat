@@ -14,6 +14,11 @@ import { UserTransfers } from './components/user-transfers/user-transfers';
 
 export const routes: Routes = [
     {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: 'homepage'
+    },
+    {
         path: 'homepage',
         component: Homepage
     },
@@ -56,4 +61,9 @@ export const routes: Routes = [
     {
         path: 'register',
         component: Register
-    }];
+    },
+    {
+        path: '**',
+        redirectTo: 'homepage'
+    }
+];

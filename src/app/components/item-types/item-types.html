@@ -1,13 +1,24 @@
-<mat-grid-list cols="5">
-    @for (x of itemTypes.value(); track $index) {
-    <mat-grid-tile>
-        <mat-grid-tile-header>
-            {{x.description}}
-        </mat-grid-tile-header>
-        <img [src]=pathById(x.imagePath) class="img">
-        <mat-grid-tile-footer>
-            <a class="itemType" routerLink="/items-by-type/{{x.id}}">{{x.name}}</a>
-        </mat-grid-tile-footer>
-    </mat-grid-tile>
-    }
-</mat-grid-list>
+@if (loading()) {
+    <div class="state">
+        <mat-progress-spinner mode="indeterminate" diameter="48"></mat-progress-spinner>
+        <div>Loading item types...</div>
+    </div>
+} @else if (error()) {
+    <div class="state error">{{ error() }}</div>
+} @else if (!itemTypes().length) {
+    <div class="state">No item types found.</div>
+} @else {
+    <mat-grid-list cols="5">
+            @for (x of itemTypes(); track $index) {
+            <mat-grid-tile>
+                    <mat-grid-tile-header>
+                            {{x.description}}
+                    </mat-grid-tile-header>
+                    <img [src]=pathById(x.imagePath) class="img">
+                    <mat-grid-tile-footer>
+                            <a class="itemType" routerLink="/items-by-type/{{x.id}}">{{x.name}}</a>
+                    </mat-grid-tile-footer>
+            </mat-grid-tile>
+            }
+    </mat-grid-list>
+}

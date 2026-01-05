@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { GlobalService } from './global-service';
 import { ItemReq } from '../model/request/item-req';
+import { ItemType } from '../model/item-type';
 
 @Injectable({
   providedIn: 'root'
@@ -46,7 +47,7 @@ export class ItemService {
   }
 
   getTypes() {
-    return this.http.get(this.api + "Types")
+    return this.http.get<ItemType[]>(this.api + "Types")
   }
 
 }
