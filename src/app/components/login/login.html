@@ -4,7 +4,7 @@
         <mat-card-subtitle>Please enter your credentials:</mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
-        <form [formGroup]="loginForm">
+        <form [formGroup]="loginForm" (ngSubmit)="login()">
             <mat-form-field>
                 <mat-label>Username</mat-label>
                 <input matInput type="text" formControlName="username">
@@ -22,9 +22,9 @@
         </form>
     </mat-card-content>
     <mat-card-actions>
-        <button matButton="tonal" [disabled]="loginForm.invalid" (click)="login()">
+        <button matButton="tonal" type="submit" [disabled]="loginForm.invalid || loading()">
             <mat-icon>login</mat-icon>
-            Login
+            {{ loading() ? 'Logging in…' : 'Login' }}
         </button>
     </mat-card-actions>
     <mat-card-footer>
