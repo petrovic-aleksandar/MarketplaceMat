@@ -1,6 +1,6 @@
 <button matButton="tonal" (click)="add()"><mat-icon>add</mat-icon>New item</button>
 
-<table mat-table [dataSource]="itemList">
+<table mat-table [dataSource]="itemList()">
     <tr mat-header-row *matHeaderRowDef="itemsTableCols"></tr>
     <tr mat-row *matRowDef="let row; columns: itemsTableCols;" [ngClass]="{ 'inactive' : !row.active }"></tr>
     <ng-container matColumnDef="id">
@@ -34,14 +34,14 @@
     <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef> Actions </th>
         <td mat-cell *matCellDef="let item">
-            <button matButton="outlined" (click)="edit(item)">Edit</button>
-            <button matButton="outlined" (click)="images(item)">Images</button>
+            <button matButton="outlined" (click)="edit(item)" [disabled]="toggleActiveId() === item.id || deletingId() === item.id">Edit</button>
+            <button matButton="outlined" (click)="images(item)" [disabled]="toggleActiveId() === item.id || deletingId() === item.id">Images</button>
             @if(item.active) {
-            <button matButton="outlined" (click)="deactivate(item.id)">Deactivate</button>
+            <button matButton="outlined" (click)="deactivate(item.id)" [disabled]="toggleActiveId() === item.id">{{ toggleActiveId() === item.id ? 'Deactivating…' : 'Deactivate' }}</button>
             } @else {
-            <button matButton="outlined" (click)="activate(item.id)">Activate</button>
+            <button matButton="outlined" (click)="activate(item.id)" [disabled]="toggleActiveId() === item.id">{{ toggleActiveId() === item.id ? 'Activating…' : 'Activate' }}</button>
             }
-            <button matButton="outlined" (click)="delete(item.id)">Delete</button>
+            <button matButton="outlined" (click)="delete(item.id)" [disabled]="toggleActiveId() === item.id || deletingId() === item.id">{{ deletingId() === item.id ? 'Deleting…' : 'Delete' }}</button>
         </td>
     </ng-container>
 </table>

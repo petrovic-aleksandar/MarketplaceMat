@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { GlobalService } from './global-service';
 import { ItemReq } from '../model/request/item-req';
 import { ItemType } from '../model/item-type';
+import { Item } from '../model/item';
 
 @Injectable({
   providedIn: 'root'
@@ -35,15 +36,15 @@ export class ItemService {
   }
 
   getById(id: number) {
-    return this.http.get(this.api + id);
+    return this.http.get<Item>(this.api + id);
   }
 
   getByUserId(sellerId: number) {
-    return this.http.get(this.api + 'bySellerId/' + sellerId)
+    return this.http.get<Item[]>(this.api + 'bySellerId/' + sellerId)
   }
 
   getByTypeId(typeId: number) {
-    return this.http.get(this.api + 'byTypeId/' + typeId)
+    return this.http.get<Item[]>(this.api + 'byTypeId/' + typeId)
   }
 
   getTypes() {
