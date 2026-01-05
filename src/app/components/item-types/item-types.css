@@ -8,3 +8,14 @@
     padding: 8px !important;
     border-radius: 15px;
 }
+
+.state {
+    display: grid;
+    gap: 8px;
+    justify-items: center;
+    padding: 16px;
+}
+
+.state.error {
+    color: red;
+}
