@@ -13,6 +13,7 @@ import { TransferReq } from '../../model/request/transfer-req';
 import { ItemService } from '../../service/item-service';
 import { TransferService } from '../../service/transfer-service';
 import { catchError, finalize, of, tap } from 'rxjs';
+import { PurchaseReq } from '../../model/request/purchase-req';
 
 @Component({
   selector: 'app-buy-item',
@@ -94,16 +95,13 @@ export class BuyItem implements OnInit {
       return
     }
 
-    const t: TransferReq = {
-      amount: current.price,
-      type: "Purchase",
+    const p: PurchaseReq = {
       buyerId: this.authService.loggedUserId,
-      sellerId: current.seller.id,
       itemId: current.id
     }
 
     this.purchaseLoading.set(true)
-    this.transferService.addPurchase(t).pipe(
+    this.transferService.addPurchase(p).pipe(
       tap(() => {
         alert("Purchase successful! The purchase amount was subtracted from your amount, and item has been moved to your possession. You will be redirected to your items page, where you will find your new item :)")
         this.router.navigateByUrl("/user-items")

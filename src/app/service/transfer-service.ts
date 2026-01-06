@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { GlobalService } from './global-service';
 import { HttpClient } from '@angular/common/http';
 import { TransferReq } from '../model/request/transfer-req';
+import { PurchaseReq } from '../model/request/purchase-req';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,7 @@ export class TransferService {
     return this.http.get(this.globalService.getApi("Transfer") + "byUserId/" + userId)
   }
 
-  addPurchase(req: TransferReq) {
+  addPurchase(req: PurchaseReq) {
     return this.http.post(this.globalService.getApi("Transfer") + "purchase", req)
   }
 
