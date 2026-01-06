@@ -9,11 +9,12 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { catchError, finalize, of, tap } from 'rxjs';
 
 @Component({
   selector: 'app-user-items',
-  imports: [ReactiveFormsModule, DatePipe, MatSelectModule, MatTableModule, NgClass, MatButton, MatIcon],
+  imports: [ReactiveFormsModule, DatePipe, MatSelectModule, MatTableModule, MatProgressSpinnerModule, NgClass, MatButton, MatIcon],
   templateUrl: './user-items.html',
   styleUrl: './user-items.css'
 })

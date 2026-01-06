@@ -1,6 +1,13 @@
 <button matButton="tonal" (click)="add()"><mat-icon>add</mat-icon>New item</button>
 
-<table mat-table [dataSource]="itemList()">
+@if(loading()) {
+  <div style="text-align: center; padding: 20px;">
+    <mat-spinner></mat-spinner>
+  </div>
+} @else if(error()) {
+  <div style="color: red; padding: 20px;">{{error()}}</div>
+} @else {
+  <table mat-table [dataSource]="itemList()">
     <tr mat-header-row *matHeaderRowDef="itemsTableCols"></tr>
     <tr mat-row *matRowDef="let row; columns: itemsTableCols;" [ngClass]="{ 'inactive' : !row.active }"></tr>
     <ng-container matColumnDef="id">
@@ -44,4 +51,5 @@
             <button matButton="outlined" (click)="delete(item.id)" [disabled]="toggleActiveId() === item.id || deletingId() === item.id">{{ deletingId() === item.id ? 'Deleting…' : 'Delete' }}</button>
         </td>
     </ng-container>
-</table>
+  </table>
+}

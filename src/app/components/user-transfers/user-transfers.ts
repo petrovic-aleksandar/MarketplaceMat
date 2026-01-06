@@ -27,6 +27,7 @@ export class UserTransfers implements OnInit {
   transfers = signal<Transfer[]>([])
   loadingUser = signal(true)
   loadingTransfers = signal(true)
+  error = signal<string | null>(null)
 
   cols = ["amount", "time", "type", "buyer", "seller", "item"]
 
@@ -40,9 +41,10 @@ export class UserTransfers implements OnInit {
     this.authService.selfInfo().pipe(
       tap((user) => {
         this.user.set(user as User)
+        this.error.set(null)
       }),
       catchError(() => {
-        alert('Failed to load user')
+        this.error.set('Failed to load user')
         return of(null)
       }),
       finalize(() => this.loadingUser.set(false))
@@ -54,9 +56,10 @@ export class UserTransfers implements OnInit {
     this.transferService.getByUserId(this.authService.loggedUserId).pipe(
       tap((transfers) => {
         this.transfers.set(transfers as Transfer[])
+        this.error.set(null)
       }),
       catchError(() => {
-        alert('Failed to load transfers')
+        this.error.set('Failed to load transfers')
         return of([] as Transfer[])
       }),
       finalize(() => this.loadingTransfers.set(false))

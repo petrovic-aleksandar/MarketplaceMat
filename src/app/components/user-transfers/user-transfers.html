@@ -1,12 +1,16 @@
 <h3>Current balance: 
-  @if(loadingUser()) {
+  @if(error()) {
+    <span style="color: red;">{{error()}}</span>
+  } @else if(loadingUser()) {
     <mat-spinner diameter="20"></mat-spinner>
   } @else {
     {{user()?.balance}}
   }
 </h3>
 
-@if(loadingTransfers()) {
+@if(error()) {
+  <div style="color: red; padding: 20px;">{{error()}}</div>
+} @else if(loadingTransfers()) {
   <div style="text-align: center; padding: 20px;">
     <mat-spinner></mat-spinner>
   </div>
