@@ -36,11 +36,11 @@ export class UserService {
   }
 
   deactivate(id:number) {
-    return this.http.put(this.api + "deactivate/" + id, null)
+    return this.http.post(this.api + "deactivate/" + id, null)
   }
 
   activate(id:number) {
-    return this.http.put(this.api + "activate/" + id, null)
+    return this.http.post(this.api + "activate/" + id, null)
   }
   
 }
