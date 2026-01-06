@@ -2,7 +2,7 @@ import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } 
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../service/auth-service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { MatCard, MatCardContent, MatCardHeader, MatCardTitle, MatCardSubtitle, MatCardFooter, MatCardActions } from '@angular/material/card';
 import { MatFormField, MatLabel } from "@angular/material/form-field";
@@ -17,7 +17,7 @@ import { catchError, finalize, of, tap } from 'rxjs';
   templateUrl: './login.html',
   styleUrl: './login.css'
 })
-export class Login {
+export class Login implements OnInit {
 
   // injected services
   authService = inject(AuthService)
@@ -33,6 +33,16 @@ export class Login {
     username: ['', Validators.required],
     password: ['', Validators.required]
   })
+
+  ngOnInit(): void {
+    // redirect away if already authenticated
+    const token = localStorage.getItem('loggedUserToken')
+    const hasValidToken = token && !this.jwtHelper.isTokenExpired(token)
+    if (hasValidToken) {
+      this.authService.readLoggedUserFromStorage()
+      this.router.navigateByUrl('/homepage')
+    }
+  }
 
   // actions
   login() {
