@@ -1,65 +1,67 @@
-import { Component, inject } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, inject, signal } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RegUser } from '../../model/request/reg-user';
 import { AuthService } from '../../service/auth-service';
 import { MatCard, MatCardContent, MatCardHeader, MatCardSubtitle, MatCardTitle } from "@angular/material/card";
-import { MatFormField, MatLabel } from "@angular/material/select";
-import { MatAnchor } from "@angular/material/button";
+import { MatFormField, MatLabel, MatError } from "@angular/material/form-field";
+import { MatButton } from "@angular/material/button";
 import { MatInput } from '@angular/material/input';
 import { MatIcon } from '@angular/material/icon';
+import { catchError, finalize, of, tap } from 'rxjs';
 
 @Component({
   selector: 'app-register',
-  imports: [ReactiveFormsModule, MatCard, MatCardHeader, MatCardTitle, MatCardContent, MatFormField, MatLabel, MatAnchor, MatInput, MatCardSubtitle, MatIcon],
+  imports: [ReactiveFormsModule, MatCard, MatCardHeader, MatCardTitle, MatCardContent, MatFormField, MatLabel, MatError, MatButton, MatInput, MatCardSubtitle, MatIcon],
   templateUrl: './register.html',
   styleUrl: './register.css'
 })
 export class Register {
 
+  // injected services
   authService = inject(AuthService)
   router = inject(Router)
+  fb = inject(FormBuilder)
 
-  userForm: FormGroup = new FormGroup({
-    username: new FormControl("", [Validators.required]),
-    password: new FormControl("", [Validators.required, Validators.minLength(6)]),
-    name: new FormControl("", [Validators.required]),
-    email: new FormControl("", [Validators.required, Validators.email]),
-    phone: new FormControl("", [Validators.required]),
+  // reactive state
+  loading = signal(false)
+
+  // reactive form (typed)
+  userForm: FormGroup = this.fb.nonNullable.group({
+    username: ['', Validators.required],
+    password: ['', [Validators.required, Validators.minLength(6)]],
+    name: ['', Validators.required],
+    email: ['', [Validators.required, Validators.email]],
+    phone: ['', Validators.required],
   })
 
-  formToRegUser(): RegUser {
-    return {
-      username: this.userForm.value.username,
-      password: this.userForm.value.password,
-      name: this.userForm.value.name,
-      email: this.userForm.value.email,
-      phone: this.userForm.value.phone,
-    }
-  }
-
+  // actions
   reset() {
     this.userForm.reset()
   }
 
   register() {
-    this.authService.register(this.formToRegUser()).subscribe({
-      next: (result) => {
+    if (this.userForm.invalid) {
+      this.userForm.markAllAsTouched()
+      return
+    }
+
+    const payload: RegUser = this.userForm.getRawValue()
+
+    this.loading.set(true)
+    this.authService.register(payload).pipe(
+      tap(() => {
         alert("Account created. you will be redirected to login page, where you can log in with your username and password.")
         this.router.navigateByUrl("/login")
-      },
-      error: (err) => {
-        if (err.status == 200) {
-          alert("Account created. you will be redirected to login page, where you can log in with your username and password!")
-          this.router.navigateByUrl("/login")
-        }
-        if (err.status == 409) {
-          alert("Username already exists. Please choose another username.")
-        } else {
-          alert("error: " + err.error)
-        }
-      }
-    });
+      }),
+      catchError((err: HttpErrorResponse) => {
+        const message = (err.error as any)?.message ?? err.error ?? err.message ?? 'Unexpected error'
+        alert(message)
+        return of(null)
+      }),
+      finalize(() => this.loading.set(false))
+    ).subscribe()
   }
 
 }
