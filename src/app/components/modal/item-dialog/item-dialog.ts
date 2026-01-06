@@ -111,41 +111,26 @@ export class ItemDialog {
     }
   }
 
-  add() {
+  save() {
     if (this.itemForm.invalid) {
       this.itemForm.markAllAsTouched()
       return
     }
 
     this.submitting.set(true)
-    this.itemService.add(this.formToItemReq()).pipe(
+
+    const request$ = this.isEdit()
+      ? this.itemService.update(this.itemId(), this.formToItemReq())
+      : this.itemService.add(this.formToItemReq())
+
+    request$.pipe(
       tap(() => {
-        alert("Item created.")
-        this.dialogRef.close()
-      }),
-      catchError((err: HttpErrorResponse) => {
-        const message = (err.error as any)?.message ?? err.error ?? err.message ?? 'Create failed'
+        const message = this.isEdit() ? "Item updated." : "Item created."
         alert(message)
-        return of(null)
-      }),
-      finalize(() => this.submitting.set(false))
-    ).subscribe()
-  }
-
-  update(id: number) {
-    if (this.itemForm.invalid) {
-      this.itemForm.markAllAsTouched()
-      return
-    }
-
-    this.submitting.set(true)
-    this.itemService.update(id, this.formToItemReq()).pipe(
-      tap(() => {
-        alert("Item updated.")
         this.dialogRef.close()
       }),
       catchError((err: HttpErrorResponse) => {
-        const message = (err.error as any)?.message ?? err.error ?? err.message ?? 'Update failed'
+        const message = (err.error as any)?.message ?? err.error ?? err.message ?? (this.isEdit() ? 'Update failed' : 'Create failed')
         alert(message)
         return of(null)
       }),

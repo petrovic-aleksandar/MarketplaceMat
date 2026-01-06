@@ -16,7 +16,7 @@ export class ItemService {
   readonly api: string = this.globalService.getApi("Item")
 
   add(i: ItemReq) {
-    return this.http.post(this.api, i)
+    return this.http.post(this.api.substring(0, this.api.length - 1), i)
   }
 
   update(id: number, i: ItemReq) {
