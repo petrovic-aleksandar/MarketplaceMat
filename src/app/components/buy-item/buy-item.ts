@@ -9,7 +9,6 @@ import { GlobalService } from '../../service/global-service';
 import { Image } from '../../model/image';
 import { ImageService } from '../../service/image-service';
 import { Item } from '../../model/item';
-import { TransferReq } from '../../model/request/transfer-req';
 import { ItemService } from '../../service/item-service';
 import { TransferService } from '../../service/transfer-service';
 import { catchError, finalize, of, tap } from 'rxjs';
