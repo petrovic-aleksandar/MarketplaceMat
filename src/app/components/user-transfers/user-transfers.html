@@ -1,17 +1,28 @@
-<h3>Current balance: {{user?.balance}}</h3>
+<h3>Current balance: 
+  @if(loadingUser()) {
+    <mat-spinner diameter="20"></mat-spinner>
+  } @else {
+    {{user()?.balance}}
+  }
+</h3>
 
-<table mat-table [dataSource]="transfers">
+@if(loadingTransfers()) {
+  <div style="text-align: center; padding: 20px;">
+    <mat-spinner></mat-spinner>
+  </div>
+} @else {
+  <table mat-table [dataSource]="transfers()">
     <tr mat-header-row *matHeaderRowDef="cols"></tr>
     <tr mat-row *matRowDef="let row; columns: cols;"
-        [ngClass]="{ 'transferMinus': row.type == 'Withdrawal' || row.type == 'Purchase' && row.seller == user?.username, 'transferPlus': row.type == 'Payment' || row.type == 'Purchase' && row.buyer == user?.username}">
+        [ngClass]="{ 'transferMinus': row.type == 'Withdrawal' || row.type == 'Purchase' && row.seller == user()?.username, 'transferPlus': row.type == 'Payment' || row.type == 'Purchase' && row.buyer == user()?.username}">
     </tr>
     <ng-container matColumnDef="amount">
         <th mat-header-cell *matHeaderCellDef> Amount </th>
         <td mat-cell *matCellDef="let transfer">
-            @if(transfer.type == "Withdrawal" || transfer.type == "Purchase" && transfer.seller == user?.username) {
+            @if(transfer.type == "Withdrawal" || transfer.type == "Purchase" && transfer.seller == user()?.username) {
             +
             }
-            @if(transfer.type == "Payment" || transfer.type == "Purchase" && transfer.buyer == user?.username) {
+            @if(transfer.type == "Payment" || transfer.type == "Purchase" && transfer.buyer == user()?.username) {
             -
             }
             {{transfer.amount}} </td>
@@ -36,4 +47,5 @@
         <th mat-header-cell *matHeaderCellDef> Item </th>
         <td mat-cell *matCellDef="let transfer">{{transfer.item}}</td>
     </ng-container>
-</table>
+  </table>
+}

@@ -106,8 +106,8 @@ export class BuyItem implements OnInit {
         alert("Purchase successful! The purchase amount was subtracted from your amount, and item has been moved to your possession. You will be redirected to your items page, where you will find your new item :)")
         this.router.navigateByUrl("/user-items")
       }),
-      catchError((err: HttpErrorResponse) => {
-        const message = (err.error as any)?.message ?? err.error ?? err.message ?? 'Purchase failed'
+      catchError((error: HttpErrorResponse) => {
+        const message = (error.error as any)?.message ?? error.error ?? error.message ?? 'Purchase failed'
         alert(message)
         return of(null)
       }),
