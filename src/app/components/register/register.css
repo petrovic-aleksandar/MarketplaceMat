@@ -1,3 +1,7 @@
 mat-card {
     width: 500px;
 }
+
+mat-card-footer {
+    padding-left: 10px;
+}

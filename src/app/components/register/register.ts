@@ -1,10 +1,10 @@
 import { Component, inject, signal } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { RegUser } from '../../model/request/reg-user';
 import { AuthService } from '../../service/auth-service';
-import { MatCard, MatCardContent, MatCardHeader, MatCardSubtitle, MatCardTitle } from "@angular/material/card";
+import { MatCard, MatCardActions, MatCardContent, MatCardFooter, MatCardHeader, MatCardSubtitle, MatCardTitle } from "@angular/material/card";
 import { MatFormField, MatLabel, MatError } from "@angular/material/form-field";
 import { MatButton } from "@angular/material/button";
 import { MatInput } from '@angular/material/input';
@@ -13,7 +13,7 @@ import { catchError, finalize, of, tap } from 'rxjs';
 
 @Component({
   selector: 'app-register',
-  imports: [ReactiveFormsModule, MatCard, MatCardHeader, MatCardTitle, MatCardContent, MatFormField, MatLabel, MatError, MatButton, MatInput, MatCardSubtitle, MatIcon],
+  imports: [ReactiveFormsModule, RouterLink, MatCard, MatCardHeader, MatCardTitle, MatCardContent, MatCardActions, MatCardFooter, MatFormField, MatLabel, MatError, MatButton, MatInput, MatCardSubtitle, MatIcon],
   templateUrl: './register.html',
   styleUrl: './register.css'
 })
