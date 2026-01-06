@@ -32,7 +32,7 @@ export class ItemService {
   }
 
   delete(id: number) {
-    return this.http.put(this.api + "Delete/" + id, null)
+    return this.http.post(this.api + "Delete/" + id, null)
   }
 
   getById(id: number) {
