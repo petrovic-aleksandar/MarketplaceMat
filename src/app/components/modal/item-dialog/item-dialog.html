@@ -1,6 +1,6 @@
 <mat-card>
     <mat-card-header>
-        @if( itemForm.value.id == 0) {
+        @if(!isEdit()) {
         <mat-card-title>New item</mat-card-title>
         } @else {
         <mat-card-title>Update item</mat-card-title>
@@ -12,14 +12,14 @@
             <mat-form-field>
                 <mat-label>Name</mat-label>
                 <input matInput type="text" formControlName="name">
-                @if (itemForm.controls['name'].invalid && itemForm.controls['name'].touched) {
+                @if (itemForm.get('name')?.invalid && itemForm.get('name')?.touched) {
                 <mat-error>Name is required</mat-error>
                 }
             </mat-form-field>
             <mat-form-field>
                 <mat-label>Description</mat-label>
                 <input matInput type="text" formControlName="description">
-                @if (itemForm.controls['description'].invalid && itemForm.controls['description'].touched) {
+                @if (itemForm.get('description')?.invalid && itemForm.get('description')?.touched) {
                 <mat-error>Description is required</mat-error>
                 }
             </mat-form-field>
@@ -30,25 +30,30 @@
             <mat-form-field>
                 <mat-label>Type</mat-label>
                 <mat-select formControlName="typeId">
-                    @for (type of itemTypes; track type.id) {
+                    @for (type of itemTypes(); track type.id) {
                     <mat-option [value]="type.id">{{type.name}}</mat-option>
                     }
                 </mat-select>
-                @if (itemForm.controls['typeId'].invalid && itemForm.controls['typeId'].touched) {
+                @if (itemForm.get('typeId')?.invalid && itemForm.get('typeId')?.touched) {
                 <mat-error>Type is required</mat-error>
                 }
             </mat-form-field>
         </form>
     </mat-card-content>
     <mat-card-actions>
-        @if( itemForm.value.id == 0) {
-        <button matButton="tonal" [disabled]="itemForm.invalid" (click)="add()"><mat-icon>save</mat-icon>Save</button>
+        @if(!isEdit()) {
+        <button matButton="tonal" type="button" [disabled]="itemForm.invalid || submitting()" (click)="add()">
+          <mat-icon>save</mat-icon>
+          {{ submitting() ? 'Saving…' : 'Save' }}
+        </button>
         } @else {
-        <button matButton="tonal" [disabled]="itemForm.invalid"
-            (click)="update(itemForm.value.id)"><mat-icon>save</mat-icon>Update</button>
+        <button matButton="tonal" type="button" [disabled]="itemForm.invalid || submitting()" (click)="update(itemId())">
+          <mat-icon>save</mat-icon>
+          {{ submitting() ? 'Updating…' : 'Update' }}
+        </button>
         }
-        <button matButton="outlined" (click)="reset()"><mat-icon>delete</mat-icon>Reset</button>
+        <button matButton="outlined" type="button" (click)="reset()" [disabled]="submitting()"><mat-icon>delete</mat-icon>Reset</button>
         <div class="spacer"></div>
-        <button matButton (click)="close()"><mat-icon>close</mat-icon>Close</button>
+        <button matButton type="button" (click)="close()" [disabled]="submitting()"><mat-icon>close</mat-icon>Close</button>
     </mat-card-actions>
 </mat-card>

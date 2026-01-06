@@ -20,7 +20,7 @@ export class ItemService {
   }
 
   update(id: number, i: ItemReq) {
-    return this.http.put(this.api + id, i)
+    return this.http.post(this.api + id, i)
   }
 
   deactivate(id: number) {
