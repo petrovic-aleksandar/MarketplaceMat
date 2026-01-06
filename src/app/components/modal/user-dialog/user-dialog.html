@@ -16,7 +16,9 @@
                 <mat-error>Username is required</mat-error>
                 }
             </mat-form-field>
+            @if (isEdit()) {
             <mat-checkbox formControlName="updatePassword" (change)="togglePassword()"> Update Password?</mat-checkbox>
+            }
             <mat-form-field>
                 <mat-label>Password</mat-label>
                 <input matInput type="password" formControlName="password">
