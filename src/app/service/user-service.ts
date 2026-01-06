@@ -27,7 +27,8 @@ export class UserService {
   }
 
   add(u:UserReq) {
-    return this.http.post(this.api, u)
+    const apiNoTrailing = this.api.substring(0, this.api.length - 1)
+    return this.http.post(apiNoTrailing, u)
   }
 
   update(u:UserReq, id:number) {

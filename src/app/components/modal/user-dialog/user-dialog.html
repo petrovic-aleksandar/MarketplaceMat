@@ -7,8 +7,8 @@
         }
         <mat-card-subtitle>Please fill in the details below:</mat-card-subtitle>
     </mat-card-header>
-    <mat-card-content>
-        <form [formGroup]="userForm">
+    <form [formGroup]="userForm" (ngSubmit)="save()">
+        <mat-card-content>
             <mat-form-field>
                 <mat-label>Username</mat-label>
                 <input matInput type="text" formControlName="username">
@@ -16,12 +16,12 @@
                 <mat-error>Username is required</mat-error>
                 }
             </mat-form-field>
-            <mat-checkbox formControlName="updatePassword" (change)="disablePassword()"> Update Password?</mat-checkbox>
+            <mat-checkbox formControlName="updatePassword" (change)="togglePassword()"> Update Password?</mat-checkbox>
             <mat-form-field>
                 <mat-label>Password</mat-label>
                 <input matInput type="password" formControlName="password">
                 @if (userForm.get('password')?.invalid && userForm.get('password')?.touched) {
-                <mat-error>Password is required</mat-error>
+                <mat-error>Password is required and must be at least 6 characters</mat-error>
                 }
             </mat-form-field>
             <mat-form-field>
@@ -51,7 +51,7 @@
             <mat-form-field>
                 <mat-label>Role</mat-label>
                 <mat-select formControlName="role">
-                    @for (role of userRoles; track role) {
+                    @for (role of roles(); track role) {
                     <mat-option [value]="role">{{role}}</mat-option>
                     }
                 </mat-select>
@@ -59,17 +59,15 @@
                 <mat-error>Role is required</mat-error>
                 }
             </mat-form-field>
-        </form>
-    </mat-card-content>
-    <mat-card-actions>
-        @if (userForm.get('id')?.value == 0) {
-        <button matButton="tonal" [disabled]="userForm.invalid" (click)="add()"><mat-icon>save</mat-icon>Save</button>
-        } @else {
-        <button matButton="tonal" [disabled]="userForm.invalid"
-            (click)="update()"><mat-icon>save</mat-icon>Update</button>
-        }
-        <button matButton="outlined" (click)="reset()"><mat-icon>delete</mat-icon>Reset</button>
-        <div class="spacer"></div>
-        <button mat-button (click)="close()"><mat-icon>close</mat-icon>Close</button>
-    </mat-card-actions>
+        </mat-card-content>
+        <mat-card-actions>
+            <button matButton="tonal" type="submit" [disabled]="userForm.invalid || submitting()">
+              <mat-icon>save</mat-icon>
+              {{ submitting() ? (isEdit() ? 'Updating…' : 'Saving…') : (isEdit() ? 'Update' : 'Save') }}
+            </button>
+            <button matButton="outlined" type="button" (click)="reset()" [disabled]="submitting()"><mat-icon>delete</mat-icon>Reset</button>
+            <div class="spacer"></div>
+            <button mat-button type="button" (click)="close()" [disabled]="submitting()"><mat-icon>close</mat-icon>Close</button>
+        </mat-card-actions>
+    </form>
 </mat-card>

@@ -1,6 +1,6 @@
-import { ChangeDetectorRef, Component, Inject, inject } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatCard, MatCardContent, MatCardHeader, MatCardModule, MatCardSubtitle, MatCardTitle, MatCardActions } from '@angular/material/card';
+import { Component, Inject, inject, signal } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatCard, MatCardContent, MatCardHeader, MatCardSubtitle, MatCardTitle, MatCardActions } from '@angular/material/card';
 import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 import { UserReq } from '../../../model/request/user-req';
 import { UserService } from '../../../service/user-service';
@@ -12,6 +12,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { User } from '../../../model/user';
 import { MatOption, MatSelect } from "@angular/material/select";
 import { MatCheckbox } from '@angular/material/checkbox';
+import { catchError, finalize, of, tap } from 'rxjs';
 
 @Component({
   selector: 'app-user-dialog',
@@ -23,109 +24,148 @@ export class UserDialog {
 
   userService = inject(UserService)
   http = inject(HttpClient)
-  cdr = inject(ChangeDetectorRef)
-
   dialogRef = inject(MatDialogRef<UserDialog>)
+  fb = inject(FormBuilder)
 
-  userRoles: string[] = []
+  // reactive state
+  roles = signal<string[]>([])
+  submitting = signal(false)
+  error = signal<string | null>(null)
+  isEdit = signal(false)
 
-  constructor(@Inject(MAT_DIALOG_DATA) user: User) {
-    if (user != null)
-      this.userToform(user)
+  // form
+  userForm: FormGroup = this.fb.nonNullable.group({
+    id: [0],
+    username: ['', Validators.required],
+    password: ['', [Validators.required, Validators.minLength(6)]],
+    updatePassword: [true],
+    name: ['', Validators.required],
+    email: ['', [Validators.required, Validators.email]],
+    phone: ['', Validators.required],
+    role: [null as string | null, Validators.required]
+  })
+
+  constructor(@Inject(MAT_DIALOG_DATA) user: User | null) {
+    if (user) {
+      this.isEdit.set(true)
+      this.userToForm(user)
+    }
     this.loadRoles()
   }
 
-  userForm: FormGroup = new FormGroup({
-    id: new FormControl(0),
-    username: new FormControl("", [Validators.required]),
-    password: new FormControl("", [Validators.required, Validators.minLength(6)]),
-    updatePassword: new FormControl(true),
-    name: new FormControl("", [Validators.required]),
-    email: new FormControl("", [Validators.required, Validators.email]),
-    phone: new FormControl("", [Validators.required]),
-    role: new FormControl(null, [Validators.required])
-  })
-
-  userToform(user: User) {
+  private userToForm(user: User) {
     this.userForm.setValue({
       id: user.id,
       username: user.username,
-      password: "",
-      updatePassword: true,
+      password: '',
+      updatePassword: false,
       name: user.name,
       email: user.email,
       phone: user.phone,
       role: user.role
     })
+    // disable password by default for edit mode
+    this.userForm.get('password')?.disable()
   }
 
-  formToUserReq(): UserReq {
+  private formToUserReq(): UserReq {
+    const raw = this.userForm.getRawValue()
     return {
-      username: this.userForm.value.username,
-      password: this.userForm.value.password == null ? "" : this.userForm.value.password,
-      updatePassword: this.userForm.value.updatePassword,
-      name: this.userForm.value.name,
-      email: this.userForm.value.email,
-      phone: this.userForm.value.phone,
-      role: this.userForm.value.role
+      username: raw.username,
+      password: raw.updatePassword ? (raw.password ?? '') : '',
+      updatePassword: raw.updatePassword,
+      name: raw.name,
+      email: raw.email,
+      phone: raw.phone,
+      role: raw.role
     }
   }
 
   loadRoles() {
-    this.userService.getRoles().subscribe((result: any) => {
-      this.userRoles = result
-      this.cdr.markForCheck()
-    })
+    this.userService.getRoles().pipe(
+      tap((result: any) => this.roles.set(result as string[])),
+      catchError(() => {
+        this.error.set('Failed to load roles')
+        return of([])
+      })
+    ).subscribe()
   }
 
-  disablePassword() {
-    if (!this.userForm.get('updatePassword')?.value) {
-      this.userForm.get('password')?.disable()
-      this.userForm.get('password')?.reset()
+  togglePassword() {
+    const shouldUpdate = this.userForm.get('updatePassword')?.value
+    const control = this.userForm.get('password')
+    if (!shouldUpdate) {
+      control?.reset()
+      control?.disable()
     } else {
-      this.userForm.get('password')?.enable()
+      control?.enable()
     }
   }
 
   reset() {
-    this.userForm.reset()
+    if (this.isEdit()) {
+      const currentId = this.userForm.get('id')?.value
+      this.userForm.reset({
+        id: currentId,
+        username: this.userForm.get('username')?.value ?? '',
+        password: '',
+        updatePassword: false,
+        name: this.userForm.get('name')?.value ?? '',
+        email: this.userForm.get('email')?.value ?? '',
+        phone: this.userForm.get('phone')?.value ?? '',
+        role: this.userForm.get('role')?.value ?? null
+      })
+      this.userForm.get('password')?.disable()
+    } else {
+      this.userForm.reset({
+        id: 0,
+        username: '',
+        password: '',
+        updatePassword: true,
+        name: '',
+        email: '',
+        phone: '',
+        role: null
+      })
+      this.userForm.get('password')?.enable()
+    }
   }
 
   close() {
     this.dialogRef.close()
   }
 
-  add() {
-    this.userService.add(this.formToUserReq()).subscribe({
-      next: (result) => {
-        alert("User created.")
-        this.dialogRef.close()
-      },
-      error: (err) => {
-        if (err.status == 200) {
-          alert("User created.")
-          this.dialogRef.close()
-          return
-        }
-        if (err.status == 409) {
-          alert("Username already exists. Please choose another username.")
-        } else {
-          alert("error: " + err.error)
-        }
-      }
-    });
-  }
+  save() {
+    if (this.userForm.invalid) {
+      this.userForm.markAllAsTouched()
+      return
+    }
 
-  update() {
-    this.userService.update(this.formToUserReq(), this.userForm.value.id).subscribe({
-      next: (result) => {
-        alert("User updated.")
-        this.dialogRef.close()
-      },
-      error: (error) => {
-        alert("error: " + error.error)
-      }
-    })
+    this.submitting.set(true)
+    this.error.set(null)
+
+    const req = this.formToUserReq()
+    const request$ = this.isEdit()
+      ? this.userService.update(req, this.userForm.getRawValue().id)
+      : this.userService.add(req)
+
+    request$.pipe(
+      tap(() => {
+        alert(this.isEdit() ? 'User updated.' : 'User created.')
+        this.dialogRef.close(true)
+      }),
+      catchError((err) => {
+        const message = (err.error as any)?.message ?? err.error ?? err.message ?? (this.isEdit() ? 'Update failed' : 'Create failed')
+        if (err.status === 409) {
+          alert('Username already exists. Please choose another username.')
+        } else {
+          alert(message)
+        }
+        this.error.set(message)
+        return of(null)
+      }),
+      finalize(() => this.submitting.set(false))
+    ).subscribe()
   }
 
 }
