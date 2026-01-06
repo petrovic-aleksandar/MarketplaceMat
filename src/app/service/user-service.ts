@@ -15,11 +15,11 @@ export class UserService {
   readonly api:string = this.globalService.getApi("User")
 
   getById(id: number) {
-    return this.http.get(this.api + id)
+    return this.http.get<User>(this.api + id)
   }
 
   getAll() {
-    return this.http.get(this.api)
+    return this.http.get<User[]>(this.api)
   }
 
   getRoles() {
@@ -32,7 +32,7 @@ export class UserService {
   }
 
   update(u:UserReq, id:number) {
-    return this.http.put(this.api + id, u)
+    return this.http.post(this.api + id, u)
   }
 
   deactivate(id:number) {
