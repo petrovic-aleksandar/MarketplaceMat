@@ -34,7 +34,7 @@
 } @else if (!items().length) {
     <div class="state">No items found for this type.</div>
 } @else {
-    <mat-grid-list cols="5">
+    <mat-grid-list cols="5" rowHeight="300px">
         @for (item of items(); track item.id) {
         <mat-grid-tile>
             <mat-grid-tile-header>
