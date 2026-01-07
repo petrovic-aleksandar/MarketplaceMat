@@ -1,112 +1,134 @@
-import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ItemService } from '../../service/item-service';
 import { Item } from '../../model/item';
 import { DatePipe, NgClass } from '@angular/common';
 import { AuthService } from '../../service/auth-service';
 import { GlobalService } from '../../service/global-service';
-import { HttpClient } from '@angular/common/http';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { MatButton } from '@angular/material/button';
-import { MatDialog } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatDialog } from '@angular/material/dialog';
+import { catchError, finalize, of, tap } from 'rxjs';
+import { ConfirmDialogComponent } from '../modal/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-user-items',
-  imports: [ReactiveFormsModule, DatePipe, MatSelectModule, MatTableModule, NgClass, MatButton, MatIcon],
+  imports: [ReactiveFormsModule, DatePipe, MatSelectModule, MatTableModule, MatProgressSpinnerModule, NgClass, MatButton, MatIcon],
   templateUrl: './user-items.html',
   styleUrl: './user-items.css'
 })
-export class UserItems implements OnInit {
+export class UserItems {
 
+  // injected services
   globalService = inject(GlobalService)
   itemService = inject(ItemService)
   authService = inject(AuthService)
-  http = inject(HttpClient)
   dialog = inject(MatDialog)
-  cdr = inject(ChangeDetectorRef)
 
-  itemList: Item[] = []
-  itemsTableCols: string[] = ['id', 'name', 'description', 'price', 'type', 'active', 'actions'];
+  // reactive state
+  itemList = signal<Item[]>([])
+  loading = signal(true)
+  toggleActiveId = signal<number | null>(null)
+  deletingId = signal<number | null>(null)
+  error = signal<string | null>(null)
 
-  ngOnInit(): void {
+  // constants
+  itemsTableCols: string[] = ['id', 'name', 'description', 'price', 'type', 'active', 'actions']
+
+  constructor() {
     this.loadItemsByUser()
   }
 
+  // data loading
   loadItemsByUser() {
-    this.itemService.getByUserId(this.authService.loggedUserId).subscribe({
-      next: (items) => {
-        this.itemList = items as Item[]
-        this.cdr.markForCheck()
-      }
-    })
+    this.loading.set(true)
+    this.itemService.getByUserId(this.authService.loggedUserId).pipe(
+      tap((items) => {
+        this.itemList.set(items)
+        this.error.set(null)
+      }),
+      catchError(() => {
+        this.error.set('Failed to load items')
+        this.itemList.set([])
+        return of([] as Item[])
+      }),
+      finalize(() => this.loading.set(false))
+    ).subscribe()
   }
 
+  // actions
   images(item: Item) {
-    this.globalService.imagesDialog(item);
+    this.globalService.imagesDialog(item)
   }
 
   add() {
-    this.globalService.itemDialog().afterClosed().subscribe(() => {
-      this.loadItemsByUser()
-    })
+    this.globalService.itemDialog().afterClosed().pipe(
+      tap(() => this.loadItemsByUser())
+    ).subscribe()
   }
 
   edit(item: Item) {
-    this.globalService.itemDialog(item).afterClosed().subscribe(() => {
-      this.loadItemsByUser()
-    })
+    this.globalService.itemDialog(item).afterClosed().pipe(
+      tap(() => this.loadItemsByUser())
+    ).subscribe()
   }
 
   deactivate(id: number) {
-    this.itemService.deactivate(id).subscribe({
-      next: () => {
+    this.toggleActiveId.set(id)
+    this.itemService.deactivate(id).pipe(
+      tap(() => {
         alert("Item deactivated.")
         this.loadItemsByUser()
-      },
-      error: (error) => {
-        if (error.status == 200) {
-          alert("Item deactivated.")
-          this.loadItemsByUser()
-          return
-        }
+      }),
+      catchError((error) => {
         alert("error: " + error.error)
-      }
-    })
+        return of(null)
+      }),
+      finalize(() => this.toggleActiveId.set(null))
+    ).subscribe()
   }
 
   activate(id: number) {
-    this.itemService.activate(id).subscribe({
-      next: () => {
+    this.toggleActiveId.set(id)
+    this.itemService.activate(id).pipe(
+      tap(() => {
         alert("Item activated.")
         this.loadItemsByUser()
-      },
-      error: (error) => {
-        if (error.status == 200) {
-          alert("Item activated.")
-          this.loadItemsByUser()
-          return
-        }
+      }),
+      catchError((error) => {
         alert("error: " + error.error)
-      }
-    })
+        return of(null)
+      }),
+      finalize(() => this.toggleActiveId.set(null))
+    ).subscribe()
   }
 
   delete(id: number) {
-    this.itemService.delete(id).subscribe({
-      next: () => {
-        alert("item deleted")
-        this.loadItemsByUser()
-      },
-      error: (error) => {
-        if (error.status == 200) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Delete Item',
+        message: 'Are you sure you want to delete this item? This action cannot be undone.'
+      }
+    })
+
+    dialogRef.afterClosed().subscribe((confirmed) => {
+      if (!confirmed) return
+
+      this.deletingId.set(id)
+      this.itemService.delete(id).pipe(
+        tap(() => {
           alert("item deleted")
           this.loadItemsByUser()
-          return
-        }
-        alert("error: " + error.error)
-      }
+        }),
+        catchError((error) => {
+          alert("error: " + error.error)
+          return of(null)
+        }),
+        finalize(() => this.deletingId.set(null))
+      ).subscribe()
     })
   }
 }

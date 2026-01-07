@@ -8,6 +8,7 @@ import { MatIcon } from "@angular/material/icon";
 import { MatInput } from "@angular/material/input";
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSliderModule } from '@angular/material/slider';
+import { catchError, finalize, of, tap } from 'rxjs';
 import { AuthService } from '../../service/auth-service';
 import { Item } from '../../model/item';
 import { ItemType } from '../../model/item-type';
@@ -75,20 +76,20 @@ export class ItemsByType {
   // data loading
   loadItems(typeId: number) {
     this.loading.set(true)
-    this.itemService.getByTypeId(typeId).subscribe({
-      next: (result) => {
+    this.itemService.getByTypeId(typeId).pipe(
+      tap((result) => {
         const data = result as Item[]
         this.allItems.set(data)
         this.setSliderRange(data)
-        this.loading.set(false)
         this.error.set(null)
-      },
-      error: () => {
-        this.loading.set(false)
+      }),
+      catchError(() => {
         this.error.set('Failed to load items')
         this.allItems.set([])
-      }
-    })
+        return of([] as Item[])
+      }),
+      finalize(() => this.loading.set(false))
+    ).subscribe()
   }
 
   // UI handlers

@@ -1,0 +1,12 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>{{ data.title }}</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <p>{{ data.message }}</p>
+  </mat-card-content>
+  <mat-card-actions>
+    <button matButton (click)="cancel()">Cancel</button>
+    <button matButton color="warn" (click)="confirm()">Confirm</button>
+  </mat-card-actions>
+</mat-card>

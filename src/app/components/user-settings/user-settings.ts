@@ -1,15 +1,16 @@
-import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, OnInit, inject, signal } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { MatButton } from '@angular/material/button';
+import { MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardSubtitle, MatCardTitle } from "@angular/material/card";
+import { MatError, MatFormField, MatLabel } from "@angular/material/form-field";
+import { MatIcon } from "@angular/material/icon";
+import { MatInput } from '@angular/material/input';
 import { User } from '../../model/user';
 import { AuthService } from '../../service/auth-service';
 import { UserService } from '../../service/user-service';
-import { MatCard, MatCardHeader, MatCardTitle, MatCardSubtitle, MatCardContent, MatCardActions } from "@angular/material/card";
-import { MatFormField, MatLabel, MatError } from "@angular/material/form-field";
-import { MatInput } from '@angular/material/input';
-import { MatIcon } from "@angular/material/icon";
-import { MatButton } from '@angular/material/button';
-import { parseHostBindings } from '@angular/compiler';
-import { Router } from '@angular/router';
+import { catchError, finalize, of, tap } from 'rxjs';
 
 @Component({
   selector: 'app-user-settings',
@@ -19,23 +20,30 @@ import { Router } from '@angular/router';
 })
 export class UserSettings implements OnInit {
 
+  // injected services
   authService = inject(AuthService)
   userService = inject(UserService)
   router = inject(Router)
-  cdr = inject(ChangeDetectorRef)
+  fb = inject(FormBuilder)
 
-  user: User | null = null
+  // reactive state
+  user = signal<User | null>(null)
+  loadingUser = signal(true)
+  updatingProfile = signal(false)
+  updatingPassword = signal(false)
+  error = signal<string | null>(null)
 
-  userForm: FormGroup = new FormGroup({
-    username: new FormControl("", [Validators.required]),
-    name: new FormControl("", [Validators.required]),
-    email: new FormControl("", [Validators.required, Validators.email]),
-    phone: new FormControl("", [Validators.required]),
+  // reactive forms (typed)
+  userForm: FormGroup = this.fb.nonNullable.group({
+    username: ['', Validators.required],
+    name: ['', Validators.required],
+    email: ['', [Validators.required, Validators.email]],
+    phone: ['', Validators.required],
   })
 
-  passwordForm: FormGroup = new FormGroup({
-    password: new FormControl("", [Validators.required]),
-    repeat: new FormControl("", [Validators.required]),
+  passwordForm: FormGroup = this.fb.nonNullable.group({
+    password: ['', Validators.required],
+    repeat: ['', Validators.required],
   })
 
   ngOnInit(): void {
@@ -43,59 +51,110 @@ export class UserSettings implements OnInit {
   }
 
   loadUser() {
-    this.authService.selfInfo().subscribe({
-      next: (user) => {
-        this.user = <User>user
+    this.loadingUser.set(true)
+    this.authService.selfInfo().pipe(
+      tap((user) => {
+        this.user.set(user as User)
+        this.error.set(null)
         this.resetProfile()
-        this.cdr.markForCheck()
-      }
-    })
+      }),
+      catchError(() => {
+        this.error.set('Failed to load user')
+        return of(null)
+      }),
+      finalize(() => this.loadingUser.set(false))
+    ).subscribe()
   }
 
+  // actions
   resetProfile() {
-    this.userForm.setValue({
-      username: this.user?.username,
-      name: this.user?.name,
-      email: this.user?.email,
-      phone: this.user?.phone
+    const current = this.user()
+    if (!current) return
+    this.userForm.reset({
+      username: current.username,
+      name: current.name,
+      email: current.email,
+      phone: current.phone
     })
   }
 
   updateProfile() {
-    this.authService.updateSelf({
-      username: this.userForm.value.username,
+    if (this.userForm.invalid) {
+      this.userForm.markAllAsTouched()
+      return
+    }
+
+    const current = this.user()
+    if (!current) return
+
+    this.updatingProfile.set(true)
+    const payload = {
+      username: this.userForm.getRawValue().username,
       password: "",
       updatePassword: false,
-      name: this.userForm.value.name,
-      email: this.userForm.value.email,
-      phone: this.userForm.value.phone,
-      role: this.user!.role
-    }).subscribe({
-      next: (result) => {
-        alert("Your profile data was succesfully updated.")
+      name: this.userForm.getRawValue().name,
+      email: this.userForm.getRawValue().email,
+      phone: this.userForm.getRawValue().phone,
+      role: current.role
+    }
+
+    this.authService.updateSelf(payload).pipe(
+      tap(() => {
+        alert("Your profile data was successfully updated.")
         this.loadUser()
-        this.resetProfile()
-      }
-    })
+      }),
+      catchError((err: HttpErrorResponse) => {
+        const message = (err.error as any)?.message ?? err.error ?? err.message ?? 'Update failed'
+        alert(message)
+        return of(null)
+      }),
+      finalize(() => this.updatingProfile.set(false))
+    ).subscribe()
   }
 
   updatePassword() {
-    this.authService.updateSelf({
-      username: this.user!.username,
-      password: this.passwordForm.value.password,
+    if (this.passwordForm.invalid) {
+      this.passwordForm.markAllAsTouched()
+      return
+    }
+
+    const passwordValue = this.passwordForm.getRawValue().password
+    const repeatValue = this.passwordForm.getRawValue().repeat
+
+    if (passwordValue !== repeatValue) {
+      alert('Passwords do not match')
+      this.passwordForm.get('repeat')?.reset()
+      return
+    }
+
+    const current = this.user()
+    if (!current) return
+
+    this.updatingPassword.set(true)
+    const payload = {
+      username: current.username,
+      password: passwordValue,
       updatePassword: true,
-      name: this.user!.name,
-      email: this.user!.email,
-      phone: this.user!.phone,
-      role: this.user!.role
-    }).subscribe({
-      next: (result) => {
-        alert("Your password was succesfully updated. Please log in with your new credentials.")
-      localStorage.clear()
-      this.authService.readLoggedUserFromStorage()
-      this.router.navigateByUrl("/login")
-      }
-    })
+      name: current.name,
+      email: current.email,
+      phone: current.phone,
+      role: current.role
+    }
+
+    this.authService.updateSelf(payload).pipe(
+      tap(() => {
+        alert("Your password was successfully updated. Please log in with your new credentials.")
+        localStorage.clear()
+        this.authService.readLoggedUserFromStorage()
+        this.router.navigateByUrl("/login")
+      }),
+      catchError((err: HttpErrorResponse) => {
+        const message = (err.error as any)?.message ?? err.error ?? err.message ?? 'Update failed'
+        alert(message)
+        return of(null)
+      }),
+      finalize(() => this.updatingPassword.set(false))
+    ).subscribe()
   }
 
 }

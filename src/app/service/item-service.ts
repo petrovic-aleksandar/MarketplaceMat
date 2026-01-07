@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { GlobalService } from './global-service';
 import { ItemReq } from '../model/request/item-req';
 import { ItemType } from '../model/item-type';
+import { Item } from '../model/item';
 
 @Injectable({
   providedIn: 'root'
@@ -15,11 +16,11 @@ export class ItemService {
   readonly api: string = this.globalService.getApi("Item")
 
   add(i: ItemReq) {
-    return this.http.post(this.api, i)
+    return this.http.post(this.api.substring(0, this.api.length - 1), i)
   }
 
   update(id: number, i: ItemReq) {
-    return this.http.put(this.api + id, i)
+    return this.http.post(this.api + id, i)
   }
 
   deactivate(id: number) {
@@ -31,19 +32,19 @@ export class ItemService {
   }
 
   delete(id: number) {
-    return this.http.put(this.api + "Delete/" + id, null)
+    return this.http.post(this.api + "Delete/" + id, null)
   }
 
   getById(id: number) {
-    return this.http.get(this.api + id);
+    return this.http.get<Item>(this.api + id);
   }
 
   getByUserId(sellerId: number) {
-    return this.http.get(this.api + 'bySellerId/' + sellerId)
+    return this.http.get<Item[]>(this.api + 'bySellerId/' + sellerId)
   }
 
   getByTypeId(typeId: number) {
-    return this.http.get(this.api + 'byTypeId/' + typeId)
+    return this.http.get<Item[]>(this.api + 'byTypeId/' + typeId)
   }
 
   getTypes() {

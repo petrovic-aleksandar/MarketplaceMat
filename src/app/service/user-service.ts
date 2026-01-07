@@ -15,11 +15,11 @@ export class UserService {
   readonly api:string = this.globalService.getApi("User")
 
   getById(id: number) {
-    return this.http.get(this.api + id)
+    return this.http.get<User>(this.api + id)
   }
 
   getAll() {
-    return this.http.get(this.api)
+    return this.http.get<User[]>(this.api)
   }
 
   getRoles() {
@@ -27,19 +27,20 @@ export class UserService {
   }
 
   add(u:UserReq) {
-    return this.http.post(this.api, u)
+    const apiNoTrailing = this.api.substring(0, this.api.length - 1)
+    return this.http.post(apiNoTrailing, u)
   }
 
   update(u:UserReq, id:number) {
-    return this.http.put(this.api + id, u)
+    return this.http.post(this.api + id, u)
   }
 
   deactivate(id:number) {
-    return this.http.put(this.api + "deactivate/" + id, null)
+    return this.http.post(this.api + "deactivate/" + id, null)
   }
 
   activate(id:number) {
-    return this.http.put(this.api + "activate/" + id, null)
+    return this.http.post(this.api + "activate/" + id, null)
   }
   
 }
