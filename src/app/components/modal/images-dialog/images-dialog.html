@@ -4,10 +4,20 @@
         <mat-card-subtitle>Manage item images</mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
+        @if (error()) {
+        <div style="color: red; margin: 16px 0;">{{ error() }}</div>
+        }
 
+        @if (loading()) {
+        <div style="display: flex; justify-content: center; padding: 32px;">
+          <mat-spinner [diameter]="40"></mat-spinner>
+        </div>
+        } @else {
+        @if (selectedImage()) {
         <img [src]="path()" class="img">
+        }
 
-        <table mat-table [dataSource]="images">
+        <table mat-table [dataSource]="images()">
             <tr mat-header-row *matHeaderRowDef="cols"></tr>
             <tr mat-row *matRowDef="let row; columns: cols;"></tr>
             <ng-container matColumnDef="path">
@@ -21,23 +31,23 @@
             <ng-container matColumnDef="actions">
                 <th mat-header-cell *matHeaderCellDef> Actions </th>
                 <td mat-cell *matCellDef="let i">
-                    <button matButton="outlined" (click)="view(i)" [disabled]="i===image">View</button>
-                    <button matButton="outlined" (click)="makeFront(i)" [disabled]="i.front">Front</button>
-                    <button matButton="outlined" (click)="delete(i)" [disabled]="i.front">Delete</button>
+                    <button matButton="outlined" (click)="view(i)" [disabled]="i===selectedImage() || loading()">View</button>
+                    <button matButton="outlined" (click)="makeFront(i)" [disabled]="i.front || loading()">Front</button>
+                    <button matButton="outlined" (click)="delete(i)" [disabled]="i.front || loading()">Delete</button>
                 </td>
             </ng-container>
         </table>
+        }
 
-        <input type="file" class="file-input" (change)="onFileSelected($event)" #fileUpload>
+        <input type="file" class="file-input" (change)="onFileSelected($event)" #fileUpload [disabled]="uploading()">
         <div class="file-upload">
-            <button matButton="tonal" mat-mini-fab color="primary" class="upload-btn" (click)="fileUpload.click()">
-                <mat-icon>attach_file</mat-icon>Upload new image
+            <button matButton="tonal" mat-mini-fab color="primary" class="upload-btn" (click)="fileUpload.click()" [disabled]="uploading() || loading()">
+                <mat-icon>{{ uploading() ? 'hourglass_empty' : 'attach_file' }}</mat-icon>{{ uploading() ? 'Uploading…' : 'Upload new image' }}
             </button>
         </div>
-
     </mat-card-content>
     <mat-card-actions>
         <div class="spacer"></div>
-        <button mat-button (click)="close()"><mat-icon>close</mat-icon>Close</button>
+        <button mat-button type="button" (click)="close()" [disabled]="uploading() || loading()"><mat-icon>close</mat-icon>Close</button>
     </mat-card-actions>
 </mat-card>
