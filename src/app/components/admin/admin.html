@@ -1,5 +1,13 @@
 <button matButton="tonal" (click)="addUser()"><mat-icon>add</mat-icon>New user</button>
-<table mat-table [dataSource]="userList">
+
+@if(loading()) {
+  <div style="text-align: center; padding: 20px;">
+    <mat-spinner></mat-spinner>
+  </div>
+} @else if(error()) {
+  <div style="color: red; padding: 20px;">{{error()}}</div>
+} @else {
+  <table mat-table [dataSource]="userList()">
     <tr mat-header-row *matHeaderRowDef="usersTableCols"></tr>
     <tr mat-row *matRowDef="let row; columns: usersTableCols;" [ngClass]="{'inactive' : !row.active}"></tr>
     <ng-container matColumnDef="id">
@@ -37,13 +45,14 @@
     <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef> Actions </th>
         <td mat-cell *matCellDef="let user">
-            <button matButton="outlined" (click)="editUser(user)">Edit</button>
-            <button matButton="outlined" (click)="userTransfers(user)">Transfers</button>
+            <button matButton="outlined" (click)="editUser(user)" [disabled]="toggleActiveId() === user.id">Edit</button>
+            <button matButton="outlined" (click)="userTransfers(user)" [disabled]="toggleActiveId() === user.id">Transfers</button>
             @if (user.active) {
-            <button matButton="outlined" (click)="deactivateUser(user.id)">Deactivate</button>
+            <button matButton="outlined" (click)="deactivateUser(user.id)" [disabled]="toggleActiveId() === user.id">{{ toggleActiveId() === user.id ? 'Deactivating…' : 'Deactivate' }}</button>
             } @else {
-            <button matButton="outlined" (click)="activateUser(user.id)">Activate</button>
+            <button matButton="outlined" (click)="activateUser(user.id)" [disabled]="toggleActiveId() === user.id">{{ toggleActiveId() === user.id ? 'Activating…' : 'Activate' }}</button>
             }
         </td>
     </ng-container>
-</table>
+  </table>
+}
