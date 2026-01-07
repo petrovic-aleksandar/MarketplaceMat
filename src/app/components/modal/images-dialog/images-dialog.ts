@@ -1,5 +1,5 @@
 import { Component, Inject, inject, signal } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from "@angular/material/dialog";
 import { MatIcon } from "@angular/material/icon";
 import { Item } from '../../../model/item';
 import { MatButton } from '@angular/material/button';
@@ -11,6 +11,7 @@ import { Image } from '../../../model/image';
 import { MatTableModule } from '@angular/material/table';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { catchError, finalize, of, tap } from 'rxjs';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-images-dialog',
@@ -23,6 +24,7 @@ export class ImagesDialog {
   globalService = inject(GlobalService)
   imageService = inject(ImageService)
   http = inject(HttpClient)
+  dialog = inject(MatDialog)
   dialogRef = inject(MatDialogRef)
 
   // reactive state
@@ -62,18 +64,29 @@ export class ImagesDialog {
   }
 
   delete(image: Image) {
-    this.loading.set(true)
-    this.imageService.delete(image.id).pipe(
-      tap(() => {
-        this.loadItemImages(this.item()!)
-      }),
-      catchError((err: HttpErrorResponse) => {
-        const message = (err.error as any)?.message ?? err.error ?? err.message ?? 'Failed to delete image'
-        this.error.set(message)
-        return of(null)
-      }),
-      finalize(() => this.loading.set(false))
-    ).subscribe()
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Delete Image',
+        message: 'Are you sure you want to delete this image?'
+      }
+    })
+
+    dialogRef.afterClosed().subscribe((confirmed) => {
+      if (!confirmed) return
+
+      this.loading.set(true)
+      this.imageService.delete(image.id).pipe(
+        tap(() => {
+          this.loadItemImages(this.item()!)
+        }),
+        catchError((err: HttpErrorResponse) => {
+          const message = (err.error as any)?.message ?? err.error ?? err.message ?? 'Failed to delete image'
+          this.error.set(message)
+          return of(null)
+        }),
+        finalize(() => this.loading.set(false))
+      ).subscribe()
+    })
   }
 
   loadItemImages(item: Item) {

@@ -10,7 +10,9 @@ import { MatTableModule } from '@angular/material/table';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatDialog } from '@angular/material/dialog';
 import { catchError, finalize, of, tap } from 'rxjs';
+import { ConfirmDialogComponent } from '../modal/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-user-items',
@@ -24,6 +26,7 @@ export class UserItems {
   globalService = inject(GlobalService)
   itemService = inject(ItemService)
   authService = inject(AuthService)
+  dialog = inject(MatDialog)
 
   // reactive state
   itemList = signal<Item[]>([])
@@ -104,17 +107,28 @@ export class UserItems {
   }
 
   delete(id: number) {
-    this.deletingId.set(id)
-    this.itemService.delete(id).pipe(
-      tap(() => {
-        alert("item deleted")
-        this.loadItemsByUser()
-      }),
-      catchError((error) => {
-        alert("error: " + error.error)
-        return of(null)
-      }),
-      finalize(() => this.deletingId.set(null))
-    ).subscribe()
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Delete Item',
+        message: 'Are you sure you want to delete this item? This action cannot be undone.'
+      }
+    })
+
+    dialogRef.afterClosed().subscribe((confirmed) => {
+      if (!confirmed) return
+
+      this.deletingId.set(id)
+      this.itemService.delete(id).pipe(
+        tap(() => {
+          alert("item deleted")
+          this.loadItemsByUser()
+        }),
+        catchError((error) => {
+          alert("error: " + error.error)
+          return of(null)
+        }),
+        finalize(() => this.deletingId.set(null))
+      ).subscribe()
+    })
   }
 }
